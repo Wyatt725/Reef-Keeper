@@ -1,0 +1,55 @@
+/* Reef Keeper - starter styles. Source: generated with Claude (Anthropic AI), 8 Oct 2026. */
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #04263b;
+    color: #e8f4f8;
+}
+
+main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    text-align: center;
+}
+
+.hint { color: #9cc3d5; }
+
+.picture {
+    min-height: 240px;
+    display: grid;
+    place-items: center;
+    margin: 16px 0;
+}
+
+.picture img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+input, button {
+    font: inherit;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #3b7a99;
+}
+
+input { width: 80px; }
+
+button {
+    background: #2b8fbf;
+    color: white;
+    cursor: pointer;
+}
+
+#result { min-height: 1.5em; font-weight: 600; }
+.correct { color: #7be0a3; }
+.wrong { color: #ff9c8a; }
