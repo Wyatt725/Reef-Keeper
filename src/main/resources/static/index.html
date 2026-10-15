@@ -1,35 +1,65 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Source: starter skeleton generated with Claude (Anthropic AI), 8 Oct 2026.
-  Week 3-4 test bench: proves the Fish API connection works end to end.
+  Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026. Complete as given.
+  The aquarium screen (wireframe 02), with the delivery (03) and place-the-fish (05) panels.
+  The old one-puzzle test page is still at /test.html.
 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reef Keeper - test bench</title>
+    <title>Reef Keeper</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
+<header class="topbar">
     <h1>Reef Keeper</h1>
-    <p class="hint">Test bench: count the fish, ignore the treasure chests.</p>
-
-    <div class="picture">
-        <img id="puzzle-image" alt="Aquarium puzzle" hidden>
-        <p id="loading">Loading a puzzle...</p>
+    <div class="stats">
+        <span>Coins: <strong id="coins">-</strong></span>
+        <span>Aquarium value: <strong id="value">-</strong></span>
     </div>
+</header>
 
-    <form id="guess-form">
-        <label for="guess">How many fish?</label>
-        <input id="guess" type="number" min="0" max="99" required autocomplete="off">
-        <button type="submit">Check</button>
-    </form>
+<main class="game">
+    <p id="message" class="message" aria-live="polite"></p>
 
-    <p id="result" aria-live="polite"></p>
-    <button id="next" type="button">Next puzzle</button>
+    <!-- Deliveries waiting (wireframe 02, note 3) -->
+    <section class="banner">
+        <div>
+            <strong><span id="waiting">0</span> deliveries waiting</strong>
+            <div class="hint">Next delivery in <span id="next-in">-</span></div>
+        </div>
+        <button id="open-delivery" type="button">Open delivery</button>
+    </section>
+
+    <!-- Open delivery: count the fish (wireframe 03). Hidden until opened. -->
+    <section id="delivery-panel" class="panel" hidden>
+        <div class="panel-head">
+            <h2>Delivery #<span id="delivery-id"></span></h2>
+            <span class="timer">Driver leaves in <strong id="delivery-timer">30</strong> s</span>
+        </div>
+        <img id="delivery-image" alt="Delivery crate: count the fish">
+        <form id="count-form">
+            <label for="count-input">How many fish are in this crate? <span class="hint">Don't count the treasure chests.</span></label>
+            <div class="row">
+                <input id="count-input" type="number" min="0" max="99" required autocomplete="off">
+                <button type="submit">Accept delivery</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Accepted fish waiting for a tank (wireframe 05). Filled in by renderGame(). -->
+    <section id="place-panel" class="panel" hidden>
+        <h2>Where should the <span id="place-fish"></span> new fish go?</h2>
+        <div id="place-tanks" class="tank-buttons"></div>
+    </section>
+
+    <!-- The tanks (wireframe 02, note 4). Filled in by renderGame(). -->
+    <h2>Your tanks</h2>
+    <section id="tanks" class="tanks"></section>
 </main>
-<script src="test-round.js"></script>
+
+<script src="aquarium.js"></script>
 </body>
 </html>

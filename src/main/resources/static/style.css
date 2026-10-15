@@ -1,4 +1,4 @@
-/* Reef Keeper - starter styles. Source: generated with Claude (Anthropic AI), 8 Oct 2026. */
+/* Reef Keeper styles. Source: generated with Claude (Anthropic AI), 8 and 15 Oct 2026. */
 body {
     margin: 0;
     font-family: system-ui, sans-serif;
@@ -7,33 +7,15 @@ body {
 }
 
 main {
-    max-width: 640px;
+    max-width: 880px;
     margin: 0 auto;
     padding: 24px 16px;
-    text-align: center;
 }
 
-.hint { color: #9cc3d5; }
+h1, h2 { margin: 0; }
+h2 { font-size: 1.15rem; margin: 20px 0 10px; }
 
-.picture {
-    min-height: 240px;
-    display: grid;
-    place-items: center;
-    margin: 16px 0;
-}
-
-.picture img {
-    max-width: 100%;
-    border-radius: 8px;
-}
-
-form {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-}
+.hint { color: #9cc3d5; font-size: 0.9rem; font-weight: normal; }
 
 input, button {
     font: inherit;
@@ -50,6 +32,54 @@ button {
     cursor: pointer;
 }
 
-#result { min-height: 1.5em; font-weight: 600; }
+button:disabled { background: #34586b; cursor: not-allowed; }
+
 .correct { color: #7be0a3; }
 .wrong { color: #ff9c8a; }
+
+/* ---- Test page (test.html) ---- */
+.picture {
+    min-height: 240px;
+    display: grid;
+    place-items: center;
+    margin: 16px 0;
+}
+.picture img { max-width: 100%; border-radius: 8px; }
+form { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+#result { min-height: 1.5em; font-weight: 600; }
+
+/* ---- Aquarium page (index.html) ---- */
+.topbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: #062f48;
+    border-bottom: 1px solid #1d5a7a;
+}
+.stats { display: flex; gap: 20px; }
+
+.message { min-height: 1.4em; font-weight: 600; margin: 0 0 12px; }
+
+.banner, .panel, .tank {
+    background: #0a3a57;
+    border: 1px solid #1d5a7a;
+    border-radius: 10px;
+    padding: 16px;
+}
+.banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel { margin-top: 16px; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.panel img { display: block; max-width: 100%; margin: 14px auto; border-radius: 8px; }
+.panel form { justify-content: flex-start; flex-direction: column; align-items: flex-start; }
+.row { display: flex; gap: 8px; }
+.timer strong { font-size: 1.3rem; }
+
+.tanks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.tank h3 { margin: 0 0 6px; font-size: 1rem; }
+.bar { height: 10px; border-radius: 99px; background: #04263b; overflow: hidden; margin: 8px 0; }
+.bar span { display: block; height: 100%; background: #2b8fbf; }
+
+.tank-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
