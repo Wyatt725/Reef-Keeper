@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026.
-// Method bodies marked TODO are written by me.
 package com.reefkeeper.game;
 
 import com.reefkeeper.puzzle.Puzzle;
@@ -52,14 +50,8 @@ public class Delivery {
         return puzzle.fishCount();
     }
 
-    /**
-     * STEP 3. True if the delivery is OPEN and {@code now} is after its deadline.
-     * A delivery that is not OPEN is never expired.
-     * Hint: Instant has isAfter(...).
-     */
     public boolean isExpired(Instant now) {
-        // TODO step 3
-        throw new UnsupportedOperationException("TODO step 3: Delivery.isExpired");
+        return status == DeliveryStatus.OPEN && deadline != null && now.isAfter(deadline);
     }
 
     // ---- State changes. Given. Package-private: only classes in the game package
