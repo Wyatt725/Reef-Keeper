@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026.
-// Method bodies marked TODO are written by me.
 package com.reefkeeper.game;
 
 /**
@@ -40,33 +38,21 @@ public class Tank {
         return decorations;
     }
 
-    /**
-     * STEP 1a. How many more fish fit in this tank.
-     * Example: a small tank (capacity 10) with 7 fish has 3 free spaces.
-     */
     public int freeSpace() {
-        // TODO step 1a
-        throw new UnsupportedOperationException("TODO step 1a: Tank.freeSpace");
+        return getCapacity()-fishCount;
     }
 
-    /**
-     * STEP 1b. True if {@code fish} more fish would fit.
-     * Hint: you can use freeSpace().
-     */
     public boolean canHold(int fish) {
-        // TODO step 1b
-        throw new UnsupportedOperationException("TODO step 1b: Tank.canHold");
+        return freeSpace() >= fish;
     }
 
-    /**
-     * STEP 1c. Puts {@code fish} more fish in the tank.
-     *
-     * @throws IllegalArgumentException if fish is negative
-     * @throws IllegalStateException    if they do not fit (the tank must not change)
-     */
     public void addFish(int fish) {
-        // TODO step 1c
-        throw new UnsupportedOperationException("TODO step 1c: Tank.addFish");
+        if (fish < 0) {
+        	throw new IllegalArgumentException("Fish count cannot be negative");
+        }
+        if (!canHold(fish)) {
+        	throw new IllegalStateException("Not enough space in the tank");
+        }
     }
 
     /** Used in Week 9 by the treasure check. Given. */
