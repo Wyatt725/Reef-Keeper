@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026.
-// Method bodies marked TODO are written by me.
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.DeliveryAcceptedEvent;
@@ -76,8 +74,30 @@ public class DeliveryService {
      * missed several deliveries, and each one has to be worked out.
      */
     public void catchUp(PlayerGame game) {
-        // TODO step 4
-        throw new UnsupportedOperationException("TODO step 4: DeliveryService.catchUp");
+    	Instant now = clock.instant();
+
+        // Part A - Catch up on missed deliveries based on the interval
+        while (!game.getLastDeliveryAt().plus(DELIVERY_INTERVAL).isAfter(now)) {
+            Instant newDeliveryTime = game.getLastDeliveryAt().plus(DELIVERY_INTERVAL);
+            game.setLastDeliveryAt(newDeliveryTime);
+
+            long waitingCount = game.getDeliveries().stream()
+                    .filter(d -> d.getStatus() == DeliveryStatus.WAITING)
+                    .count();
+
+            if (waitingCount < MAX_WAITING) {
+                Delivery delivery = game.addDelivery(newDeliveryTime);
+                events.publish(new DeliveryArrivedEvent(delivery.getId()));
+            }
+        }
+
+        // Part B - Handle expired open deliveries
+        for (Delivery delivery : game.getDeliveries()) {
+            if (delivery.getStatus() == DeliveryStatus.OPEN && delivery.isExpired(now)) {
+                delivery.returnToSender();
+                events.publish(new DeliveryReturnedEvent(delivery.getId(), DeliveryReturnedEvent.Reason.TOO_LATE));
+            }
+        }
     }
 
     /**
@@ -91,8 +111,28 @@ public class DeliveryService {
      *   5. Return the delivery.
      */
     public Delivery openNext(PlayerGame game) {
-        // TODO step 5
-        throw new UnsupportedOperationException("TODO step 5: DeliveryService.openNext");
+    	catchUp(game);
+        Instant now = clock.instant();
+
+        // Check if there is already an open delivery
+        Delivery openDelivery = game.getDeliveries().stream()
+                .filter(d -> d.getStatus() == DeliveryStatus.OPEN)
+                .findFirst()
+                .orElse(null);
+
+        if (openDelivery != null) {
+            return openDelivery;
+        }
+
+        // Otherwise, get the first waiting delivery
+        Delivery waitingDelivery = game.getDeliveries().stream()
+                .filter(d -> d.getStatus() == DeliveryStatus.WAITING)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No deliveries waiting"));
+
+        Puzzle puzzle = puzzles.nextPuzzle();
+        waitingDelivery.open(puzzle, now.plus(ANSWER_TIME));
+        return waitingDelivery;
     }
 
     /**
@@ -108,8 +148,30 @@ public class DeliveryService {
      *      return CountResult.WRONG.
      */
     public CountResult submitCount(PlayerGame game, int deliveryId, int count) {
-        // TODO step 6
-        throw new UnsupportedOperationException("TODO step 6: DeliveryService.submitCount");
+    	Instant now = clock.instant();
+
+        Delivery delivery = game.findDelivery(deliveryId)
+                .orElseThrow(() -> new NoSuchElementException("Delivery " + deliveryId + " not found"));
+
+        if (delivery.getStatus() != DeliveryStatus.OPEN) {
+            throw new IllegalStateException("Delivery " + deliveryId + " is not open");
+        }
+
+        if (delivery.isExpired(now)) {
+            delivery.returnToSender();
+            events.publish(new DeliveryReturnedEvent(delivery.getId(), DeliveryReturnedEvent.Reason.TOO_LATE));
+            return CountResult.TOO_LATE;
+        }
+
+        if (count == delivery.fishCount()) {
+            delivery.accept();
+            events.publish(new DeliveryAcceptedEvent(delivery.getId(), delivery.fishCount()));
+            return CountResult.CORRECT;
+        } else {
+            delivery.returnToSender();
+            events.publish(new DeliveryReturnedEvent(delivery.getId(), DeliveryReturnedEvent.Reason.WRONG_COUNT));
+            return CountResult.WRONG;
+        }
     }
 
     /**
@@ -125,8 +187,21 @@ public class DeliveryService {
      * delivery stays ACCEPTED and the player can buy a tank and try again.
      */
     public void placeFish(PlayerGame game, int deliveryId, int tankId) {
-        // TODO step 7
-        throw new UnsupportedOperationException("TODO step 7: DeliveryService.placeFish");
+    	Delivery delivery = game.findDelivery(deliveryId)
+                .orElseThrow(() -> new NoSuchElementException("Delivery " + deliveryId + " not found"));
+
+        Tank tank = game.getAquarium().findTank(tankId)
+                .orElseThrow(() -> new NoSuchElementException("Tank " + tankId + " not found"));
+
+        if (delivery.getStatus() != DeliveryStatus.ACCEPTED) {
+            throw new IllegalStateException("Delivery " + deliveryId + " is not accepted");
+        }
+
+        // Add fish first; will throw an exception if it doesn't fit
+        tank.addFish(delivery.fishCount());
+
+        delivery.place();
+        events.publish(new FishPlacedEvent(delivery.getId(), tank.getId(), delivery.fishCount()));
     }
 }
 // Note: Eclipse will mark some imports as "never used" (yellow) until you write steps 4-7. That is fine.
