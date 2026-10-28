@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026.
-// Method bodies marked TODO are written by me.
 package com.reefkeeper.web;
 
 import com.reefkeeper.game.DeliveryService;
@@ -77,8 +75,9 @@ public class GameController {
      */
     @PostMapping("/deliveries/open")
     public DeliveryView openDelivery(HttpSession session) {
-        // TODO step 9a
-        throw new UnsupportedOperationException("TODO step 9a: GameController.openDelivery");
+    	PlayerGame game = currentGame(session);
+        com.reefkeeper.game.Delivery delivery = deliveries.openNext(game);
+        return DeliveryView.of(delivery, clock.instant());
     }
 
     /**
@@ -89,8 +88,10 @@ public class GameController {
      */
     @PostMapping("/deliveries/{id}/count")
     public CountResponse submitCount(@PathVariable("id") int id, @RequestBody CountRequest request, HttpSession session) {
-        // TODO step 9b
-        throw new UnsupportedOperationException("TODO step 9b: GameController.submitCount");
+    	PlayerGame game = currentGame(session);
+        com.reefkeeper.game.CountResult result = deliveries.submitCount(game, id, request.count());
+        int fishCount = game.findDelivery(id).orElseThrow().fishCount();
+        return new CountResponse(result.name(), fishCount);
     }
 
     /**
@@ -100,8 +101,10 @@ public class GameController {
      */
     @PostMapping("/deliveries/{id}/place")
     public GameView placeFish(@PathVariable("id") int id, @RequestBody PlaceRequest request, HttpSession session) {
-        // TODO step 9c
-        throw new UnsupportedOperationException("TODO step 9c: GameController.placeFish");
+    	PlayerGame game = currentGame(session);
+        deliveries.placeFish(game, id, request.tankId());
+        deliveries.catchUp(game);
+        return GameView.of(game, deliveries.timeUntilNextDelivery(game));
     }
 
     // ---- Error handling. Given. Turns the game's exceptions into HTTP status codes
