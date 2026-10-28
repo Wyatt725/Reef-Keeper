@@ -3,7 +3,10 @@
 // Methods marked TODO are written by me.
 package com.reefkeeper.listeners;
 
+import com.reefkeeper.game.events.DeliveryAcceptedEvent;
 import com.reefkeeper.game.events.DeliveryArrivedEvent;
+import com.reefkeeper.game.events.DeliveryReturnedEvent;
+import com.reefkeeper.game.events.FishPlacedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -27,9 +30,18 @@ public class DeliveryLogListener {
         log.info("Delivery {} arrived", event.deliveryId());
     }
 
-    // TODO step 8: add three more @EventListener methods, one each for
-    //   DeliveryAcceptedEvent  -> log "Delivery {} accepted: {} fish"
-    //   DeliveryReturnedEvent  -> log "Delivery {} returned: {}" with the reason
-    //   FishPlacedEvent        -> log "{} fish from delivery {} placed in tank {}"
-    // Copy the shape of onDeliveryArrived above and add the imports.
+    @EventListener
+    public void onDeliveryAccepted(DeliveryAcceptedEvent event) {
+        log.info("Delivery {} accepted: {} fish", event.deliveryId(), event.fish());
+    }
+
+    @EventListener
+    public void onDeliveryReturned(DeliveryReturnedEvent event) {
+        log.info("Delivery {} returned: {}", event.deliveryId(), event.reason());
+    }
+
+    @EventListener
+    public void onFishPlaced(FishPlacedEvent event) {
+        log.info("{} fish from delivery {} placed in tank {}", event.fish(), event.deliveryId(), event.tankId());
+    }
 }
