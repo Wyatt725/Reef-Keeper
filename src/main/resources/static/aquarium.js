@@ -119,8 +119,22 @@ async function loadGame() {
  *   6. startCountdown(openDelivery.secondsLeft).
  */
 async function openNextDelivery() {
-    // TODO step 10a
-    showMessage('TODO step 10a: openNextDelivery() in aquarium.js', 'wrong');
+	const res = await api('POST', '/api/deliveries/open');
+	if (!res.ok) {
+	    showMessage(res.data.error, 'wrong');
+	    return;
+	}
+	openDelivery = res.data;
+	el('delivery-id').textContent = openDelivery.id;
+	el('delivery-image').src = openDelivery.image;
+
+	const panel = el('delivery-panel');
+	panel.hidden = false;
+	const input = el('count-input');
+	input.value = '';
+	input.focus();
+
+	startCountdown(openDelivery.secondsLeft);
 }
 
 /**
@@ -133,7 +147,23 @@ async function openNextDelivery() {
  * The server keeps the real deadline; this countdown is only for the player to see.
  */
 function startCountdown(seconds) {
-    // TODO step 10b
+	if (countdownTimer) {
+	    clearInterval(countdownTimer);
+	}
+	el('delivery-timer').textContent = seconds;
+
+	countdownTimer = setInterval(() => {
+	    seconds--;
+	    el('delivery-timer').textContent = seconds;
+
+	    if (seconds <= 0) {
+	        clearInterval(countdownTimer);
+	        el('delivery-panel').hidden = true;
+	        openDelivery = null;
+	        showMessage('Too late: the driver left.', 'wrong');
+	        loadGame();
+	    }
+	}, 1000);
 }
 
 /**
@@ -149,8 +179,32 @@ function startCountdown(seconds) {
  *   6. loadGame()  (renderGame then shows the place-the-fish buttons if the count was right)
  */
 async function sendCount(event) {
-    // TODO step 10c
-    event.preventDefault();
+	event.preventDefault();
+	if (countdownTimer) {
+	    clearInterval(countdownTimer);
+	}
+
+	const countVal = Number(el('count-input').value);
+	const deliveryId = openDelivery.id;
+
+	el('delivery-panel').hidden = true;
+	openDelivery = null;
+
+	const res = await api('POST', `/api/deliveries/${deliveryId}/count`, { count: countVal });
+
+	if (!res.ok) {
+	    showMessage(res.data.error, 'wrong');
+	} else {
+	    if (res.data.result === 'CORRECT') {
+	        showMessage(`Correct! ${res.data.fish} fish accepted.`, 'correct');
+	    } else if (res.data.result === 'WRONG') {
+	        showMessage(`Not quite: there were ${res.data.fish} fish. Delivery returned.`, 'wrong');
+	    } else if (res.data.result === 'TOO_LATE') {
+	        showMessage('Too late: the driver left.', 'wrong');
+	    }
+	}
+
+	loadGame();
 }
 
 /**
@@ -160,7 +214,16 @@ async function sendCount(event) {
  *   3. Otherwise: game = res.data, renderGame(game), showMessage('Fish placed in your tank.', 'correct').
  */
 async function placeFish(deliveryId, tankId) {
-    // TODO step 10d
+	const res = await api('POST', `/api/deliveries/${deliveryId}/place`, { tankId: tankId });
+
+	if (!res.ok) {
+	    showMessage(res.data.error, 'wrong');
+	    return;
+	}
+
+	game = res.data;
+	renderGame(game);
+	showMessage('Fish placed in your tank.', 'correct');
 }
 
 // ---------- Given: connect events to handlers ----------
