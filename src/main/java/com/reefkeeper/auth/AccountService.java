@@ -1,0 +1,45 @@
+// Reef Keeper - CIS045-3 coursework.
+// Source: skeleton generated with Claude (Anthropic AI), 29 Oct 2026.
+// Method bodies marked TODO are written by me.
+package com.reefkeeper.auth;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.Clock;
+
+/** Creating accounts: checks the details, hashes the password, saves the account. */
+@Service
+public class AccountService {
+
+    /** 3 to 20 letters, digits or underscores. */
+    public static final String USERNAME_PATTERN = "[A-Za-z0-9_]{3,20}";
+    public static final int MIN_PASSWORD_LENGTH = 8;
+
+    private final AccountStore store;
+    private final PasswordEncoder passwordEncoder;
+    private final Clock clock;
+
+    public AccountService(AccountStore store, PasswordEncoder passwordEncoder, Clock clock) {
+        this.store = store;
+        this.passwordEncoder = passwordEncoder;
+        this.clock = clock;
+    }
+
+    /**
+     * STEP 1. Creates a new account and returns it.
+     *
+     *   1. Trim the username (null counts as "").
+     *   2. Not matching USERNAME_PATTERN: throw new RegistrationException("Usernames are 3-20 letters, digits or _").
+     *   3. Password null or shorter than MIN_PASSWORD_LENGTH:
+     *      throw new RegistrationException("Passwords need at least 8 characters").
+     *   4. Password not equal to confirmPassword: throw new RegistrationException("The two passwords don't match").
+     *   5. store.usernameTaken(username): throw new RegistrationException("That username is taken").
+     *   6. String hash = passwordEncoder.encode(password)   <- bcrypt, never store the password itself
+     *   7. Save and return new PlayerAccount(username, hash, clock.instant()).
+     */
+    public PlayerAccount register(String username, String password, String confirmPassword) {
+        // TODO step 1
+        throw new UnsupportedOperationException("TODO step 1: AccountService.register");
+    }
+}

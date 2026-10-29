@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026. Complete as given.
+  Source: skeleton generated with Claude (Anthropic AI), 15 and 29 Oct 2026. Complete as given.
   The aquarium screen (wireframe 02), with the delivery (03) and place-the-fish (05) panels.
-  The old one-puzzle test page is still at /test.html.
+  Week 6: shows who is logged in, has a log-out button, and loads account.js before aquarium.js.
 -->
 <html lang="en">
 <head>
@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reef Keeper</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
 <header class="topbar">
@@ -18,6 +19,14 @@
     <div class="stats">
         <span>Coins: <strong id="coins">-</strong></span>
         <span>Aquarium value: <strong id="value">-</strong></span>
+    </div>
+    <div class="player">
+        <span>Keeper: <strong id="player-name">-</strong></span>
+        <!-- Logging out is a POST with the CSRF token, so another site can't log you out -->
+        <form method="post" action="/logout">
+            <input type="hidden" name="_csrf">
+            <button type="submit">Log out</button>
+        </form>
     </div>
 </header>
 
@@ -60,6 +69,7 @@
     <section id="tanks" class="tanks"></section>
 </main>
 
+<script src="account.js"></script>
 <script src="aquarium.js"></script>
 </body>
 </html>

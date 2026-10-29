@@ -1,0 +1,26 @@
+/* Reef Keeper login and register pages. Source: generated with Claude (Anthropic AI), 29 Oct 2026. */
+.auth {
+    max-width: 380px;
+    margin: 8vh auto 0;
+    padding: 0 16px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin: 12px 0 16px;
+    padding: 20px;
+    background: #0a3a57;
+    border: 1px solid #1d5a7a;
+    border-radius: 10px;
+}
+
+.auth-form input { width: auto; margin-bottom: 8px; }
+.auth-form button { margin-top: 6px; }
+.auth a { color: #8fd3f4; }
+
+.player { display: flex; align-items: center; gap: 10px; }
+.player form { display: inline; margin: 0; }
+.player button { padding: 4px 10px; }

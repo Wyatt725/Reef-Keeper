@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+  Reef Keeper - CIS045-3 coursework.
+  Source: generated with Claude (Anthropic AI), 29 Oct 2026. Complete as given.
+  Login screen (wireframe 01). The form is posted to /login, which Spring Security handles.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reef Keeper - Log in</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<main class="auth">
+    <h1>Reef Keeper</h1>
+    <p class="hint">Count the deliveries. Grow your aquarium.</p>
+
+    <p id="auth-message" class="message" aria-live="polite"></p>
+
+    <form method="post" action="/login" class="auth-form">
+        <!-- Filled in by account.js from the XSRF-TOKEN cookie (CSRF protection) -->
+        <input type="hidden" name="_csrf">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required autocomplete="username">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password">
+        <button type="submit">Log in</button>
+    </form>
+
+    <p class="hint">New keeper? <a href="register.html">Create an account</a></p>
+</main>
+<script src="account.js"></script>
+</body>
+</html>

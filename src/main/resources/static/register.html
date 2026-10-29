@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+  Reef Keeper - CIS045-3 coursework.
+  Source: generated with Claude (Anthropic AI), 29 Oct 2026. Complete as given.
+  Create-account screen (wireframe 01). account.js sends the form to POST /api/register as JSON.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reef Keeper - Create account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<main class="auth">
+    <h1>Reef Keeper</h1>
+    <p class="hint">Create an account to start your aquarium.</p>
+
+    <p id="auth-message" class="message" aria-live="polite"></p>
+
+    <form id="register-form" class="auth-form">
+        <label for="username">Username <span class="hint">(3-20 letters, digits or _)</span></label>
+        <input id="username" type="text" required autocomplete="username">
+        <label for="password">Password <span class="hint">(at least 8 characters)</span></label>
+        <input id="password" type="password" required autocomplete="new-password">
+        <label for="confirm-password">Confirm password</label>
+        <input id="confirm-password" type="password" required autocomplete="new-password">
+        <button type="submit">Create account</button>
+    </form>
+
+    <p class="hint">Already have an account? <a href="login.html">Log in</a></p>
+</main>
+<script src="account.js"></script>
+</body>
+</html>

@@ -32,11 +32,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--
-          Week 6 (accounts): uncomment these three when you add login and the database.
-          Spring Security locks every page behind a login as soon as it is on the classpath,
-          so leave it out until you are ready to configure it.
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -50,7 +45,6 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-        -->
 
         <!-- JUnit 5 and friends, for the tests in src/test/java -->
         <dependency>
