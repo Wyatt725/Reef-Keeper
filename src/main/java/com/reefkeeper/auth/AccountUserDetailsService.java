@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 29 Oct 2026.
-// Method bodies marked TODO are written by me.
 package com.reefkeeper.auth;
 
 import org.springframework.security.core.userdetails.User;
@@ -25,22 +23,10 @@ public class AccountUserDetailsService implements UserDetailsService {
         this.store = store;
     }
 
-    /**
-     * STEP 2. Look the player up and describe them to Spring Security.
-     *
-     *   Found:   return User.withUsername(account.getUsername())
-     *                       .password(account.getPasswordHash())
-     *                       .roles("PLAYER")
-     *                       .build();
-     *   Missing: throw new UsernameNotFoundException("No player called " + username)
-     *
-     * Hint: store.findByUsername(username) gives an Optional; use .map(...) and .orElseThrow(...),
-     * or an if/else with isPresent() and get().
-     */
+    /** Look the player up and describe them to Spring Security. */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO step 2
-        throw new UnsupportedOperationException("TODO step 2: AccountUserDetailsService.loadUserByUsername");
+    	return store.findByUsername(username).map(account -> User.withUsername(account.getUsername()).password(account.getPasswordHash()).roles("PLAYER").build()).orElseThrow(() -> new UsernameNotFoundException("No player called " + username));
     }
 }
 // Note: Eclipse marks the User import as "never used" (yellow) until you write step 2. That is fine.

@@ -25,17 +25,9 @@ public class AccountService {
     }
 
     /**
-     * STEP 1. Creates a new account and returns it.
-     *
-     *   1. Trim the username (null counts as "").
-     *   2. Not matching USERNAME_PATTERN: throw new RegistrationException("Usernames are 3-20 letters, digits or _").
-     *   3. Password null or shorter than MIN_PASSWORD_LENGTH:
-     *      throw new RegistrationException("Passwords need at least 8 characters").
-     *   4. Password not equal to confirmPassword: throw new RegistrationException("The two passwords don't match").
-     *   5. store.usernameTaken(username): throw new RegistrationException("That username is taken").
-     *   6. String hash = passwordEncoder.encode(password)   <- bcrypt, never store the password itself
-     *   7. Save and return new PlayerAccount(username, hash, clock.instant()).
+     *Creates a new account and returns it.
      */
+    
     public PlayerAccount register(String username, String password, String confirmPassword) {
     	String trimmedUsername = username == null ? "" : username.trim();
 
