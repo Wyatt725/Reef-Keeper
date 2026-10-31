@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 29 Oct 2026.
-// Method bodies marked TODO are written by me.
 package com.reefkeeper.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +37,28 @@ public class AccountService {
      *   7. Save and return new PlayerAccount(username, hash, clock.instant()).
      */
     public PlayerAccount register(String username, String password, String confirmPassword) {
-        // TODO step 1
-        throw new UnsupportedOperationException("TODO step 1: AccountService.register");
+    	String trimmedUsername = username == null ? "" : username.trim();
+
+        if (!trimmedUsername.matches(USERNAME_PATTERN)) {
+            throw new RegistrationException("Usernames are 3-20 letters, digits or _");
+        }
+
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Passwords need at least 8 characters");
+        }
+
+        if (!password.equals(confirmPassword)) {
+            throw new RegistrationException("The two passwords don't match");
+        }
+
+        if (store.usernameTaken(trimmedUsername)) {
+            throw new RegistrationException("That username is taken");
+        }
+
+        String hash = passwordEncoder.encode(password);
+        PlayerAccount account = new PlayerAccount(trimmedUsername, hash, clock.instant());
+        store.save(account);
+        
+        return account;
     }
 }
