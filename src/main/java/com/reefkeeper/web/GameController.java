@@ -9,7 +9,8 @@ import com.reefkeeper.web.ApiModels.CountResponse;
 import com.reefkeeper.web.ApiModels.DeliveryView;
 import com.reefkeeper.web.ApiModels.GameView;
 import com.reefkeeper.web.ApiModels.PlaceRequest;
-import jakarta.servlet.http.HttpSession;
+import com.reefkeeper.store.PlayerGameStore;
+import java.security.Principal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,91 +25,68 @@ import java.time.Clock;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-/**
- * The REST API the browser talks to. Thin on purpose: it only translates between HTTP/JSON
- * and the game. No game rules here; they live in DeliveryService (separation of concerns).
- *
- *   GET  /api/game                   -> GameView
- *   POST /api/deliveries/open        -> DeliveryView
- *   POST /api/deliveries/{id}/count  -> CountResponse   body {"count": 7}
- *   POST /api/deliveries/{id}/place  -> GameView        body {"tankId": 1}
- */
+
 @RestController
 @RequestMapping("/api")
 public class GameController {
 
-    private static final String GAME_KEY = "reefKeeper.game";
-
     private final DeliveryService deliveries;
     private final Clock clock;
+    private final PlayerGameStore games;
 
-    public GameController(DeliveryService deliveries, Clock clock) {
+    public GameController(DeliveryService deliveries, Clock clock, PlayerGameStore games) {
         this.deliveries = deliveries;
         this.clock = clock;
+        this.games = games;
     }
 
     /**
-     * This browser's game, kept in its HttpSession (the JSESSIONID cookie points to it).
-     * Starts a new game the first time. Given. In Week 6 this changes to "load the game
-     * of the logged-in player from the database".
+     * The logged-in player's game. Spring Security puts the logged-in user into the
+     * Principal, and the PlayerGameStore keeps one game per username, so the aquarium
+     * now belongs to the account instead of the browser.
      */
-    private PlayerGame currentGame(HttpSession session) {
-        PlayerGame game = (PlayerGame) session.getAttribute(GAME_KEY);
-        if (game == null) {
-            game = deliveries.startNewGame();
-            session.setAttribute(GAME_KEY, game);
-        }
-        return game;
+    private PlayerGame currentGame(Principal principal) {
+        return games.gameFor(principal.getName());
     }
 
-    /** Worked example for the three TODO methods below. Given. */
     @GetMapping("/game")
-    public GameView getGame(HttpSession session) {
-        PlayerGame game = currentGame(session);
+    public GameView getGame(Principal principal) {
+        PlayerGame game = currentGame(principal);
         deliveries.catchUp(game);
         return GameView.of(game, deliveries.timeUntilNextDelivery(game));
     }
-
+    
     /**
-     * STEP 9a. Open the next delivery.
-     * Get the game, call deliveries.openNext(game), and return DeliveryView.of(delivery, clock.instant()).
+     * Open the next delivery.
      */
     @PostMapping("/deliveries/open")
-    public DeliveryView openDelivery(HttpSession session) {
-    	PlayerGame game = currentGame(session);
+    public DeliveryView openDelivery(Principal principal) {
+    	PlayerGame game = currentGame(principal);
         com.reefkeeper.game.Delivery delivery = deliveries.openNext(game);
         return DeliveryView.of(delivery, clock.instant());
     }
 
     /**
-     * STEP 9b. Check a count.
-     * Get the game, call deliveries.submitCount(game, id, request.count()).
-     * Then find the delivery again (game.findDelivery(id).orElseThrow()) to read its fishCount(),
-     * and return new CountResponse(result.name(), fishCount).
+     * Check a count.
      */
     @PostMapping("/deliveries/{id}/count")
-    public CountResponse submitCount(@PathVariable("id") int id, @RequestBody CountRequest request, HttpSession session) {
-    	PlayerGame game = currentGame(session);
+    public CountResponse submitCount(@PathVariable("id") int id, @RequestBody CountRequest request, Principal principal) {
+    	PlayerGame game = currentGame(principal);
         com.reefkeeper.game.CountResult result = deliveries.submitCount(game, id, request.count());
         int fishCount = game.findDelivery(id).orElseThrow().fishCount();
         return new CountResponse(result.name(), fishCount);
     }
 
     /**
-     * STEP 9c. Place fish in a tank.
-     * Get the game, call deliveries.placeFish(game, id, request.tankId()),
-     * then return the updated GameView (same as getGame).
+     * Place fish in a tank.
      */
     @PostMapping("/deliveries/{id}/place")
-    public GameView placeFish(@PathVariable("id") int id, @RequestBody PlaceRequest request, HttpSession session) {
-    	PlayerGame game = currentGame(session);
+    public GameView placeFish(@PathVariable("id") int id, @RequestBody PlaceRequest request, Principal principal) {
+    	PlayerGame game = currentGame(principal);
         deliveries.placeFish(game, id, request.tankId());
         deliveries.catchUp(game);
         return GameView.of(game, deliveries.timeUntilNextDelivery(game));
     }
-
-    // ---- Error handling. Given. Turns the game's exceptions into HTTP status codes
-    // ---- with a JSON body like {"error": "No deliveries waiting"} for the browser to show.
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> conflict(IllegalStateException e) {

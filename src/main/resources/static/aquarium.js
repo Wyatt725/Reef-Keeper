@@ -11,7 +11,6 @@ const el = (id) => document.getElementById(id);
 
 /**
  * Calls our Java server and returns { ok, status, data }.
- * method: 'GET' or 'POST'; url: e.g. '/api/game'; body: an object to send as JSON (optional).
  */
 async function api(method, url, body) {
     const options = { method, headers: {} };
@@ -19,7 +18,18 @@ async function api(method, url, body) {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(body);
     }
+    // every request that changes something must carry the CSRF token
+    // (csrfToken() is in account.js, which index.html loads before this file)
+    if (method !== 'GET') {
+        options.headers['X-XSRF-TOKEN'] = csrfToken();
+    }
     const response = await fetch(url, options);
+	
+    // not logged in, or the session ended -> back to the login page
+    if (response.status === 401) {
+        window.location.href = '/login.html';
+        return { ok: false, status: 401, data: { error: 'Please log in' } };
+    }
     let data = null;
     try {
         data = await response.json();
@@ -110,13 +120,7 @@ async function loadGame() {
 // ---------- TODO: the four event handlers ----------
 
 /**
- * STEP 10a. Runs when "Open delivery" is clicked.
- *   1. POST to /api/deliveries/open (use api()).
- *   2. If !res.ok: showMessage(res.data.error, 'wrong') and stop.
- *   3. Save res.data in openDelivery.
- *   4. Put openDelivery.id in #delivery-id and openDelivery.image in #delivery-image's src.
- *   5. Show #delivery-panel (set .hidden = false), empty #count-input and focus() it.
- *   6. startCountdown(openDelivery.secondsLeft).
+ *Runs when "Open delivery" is clicked.
  */
 async function openNextDelivery() {
 	const res = await api('POST', '/api/deliveries/open');
@@ -138,13 +142,7 @@ async function openNextDelivery() {
 }
 
 /**
- * STEP 10b. Shows the 30-second countdown.
- *   1. Write seconds into #delivery-timer.
- *   2. countdownTimer = setInterval(() => { ... }, 1000) where the arrow function:
- *        - takes 1 off seconds and writes it into #delivery-timer
- *        - when seconds reaches 0: clearInterval(countdownTimer), hide #delivery-panel,
- *          openDelivery = null, showMessage('Too late: the driver left.', 'wrong'), loadGame()
- * The server keeps the real deadline; this countdown is only for the player to see.
+ * Shows the 30-second countdown.
  */
 function startCountdown(seconds) {
 	if (countdownTimer) {
@@ -167,16 +165,7 @@ function startCountdown(seconds) {
 }
 
 /**
- * STEP 10c. Runs when the count form is submitted.
- *   1. event.preventDefault() so the page doesn't reload.
- *   2. clearInterval(countdownTimer) to stop the countdown.
- *   3. POST to '/api/deliveries/' + openDelivery.id + '/count' with { count: Number(#count-input value) }.
- *   4. Hide #delivery-panel and set openDelivery = null.
- *   5. If !res.ok: showMessage(res.data.error, 'wrong'). Otherwise, depending on res.data.result:
- *        'CORRECT'  -> 'Correct! ' + res.data.fish + ' fish accepted.'       (kind 'correct')
- *        'WRONG'    -> 'Not quite: there were ' + res.data.fish + ' fish. Delivery returned.' (kind 'wrong')
- *        'TOO_LATE' -> 'Too late: the driver left.'                           (kind 'wrong')
- *   6. loadGame()  (renderGame then shows the place-the-fish buttons if the count was right)
+ *Runs when the count form is submitted.
  */
 async function sendCount(event) {
 	event.preventDefault();
@@ -208,10 +197,7 @@ async function sendCount(event) {
 }
 
 /**
- * STEP 10d. Runs when a tank button in the place-the-fish panel is clicked.
- *   1. POST to '/api/deliveries/' + deliveryId + '/place' with { tankId }.
- *   2. If !res.ok: showMessage(res.data.error, 'wrong') and stop.
- *   3. Otherwise: game = res.data, renderGame(game), showMessage('Fish placed in your tank.', 'correct').
+ * Runs when a tank button in the place-the-fish panel is clicked.
  */
 async function placeFish(deliveryId, tankId) {
 	const res = await api('POST', `/api/deliveries/${deliveryId}/place`, { tankId: tankId });
