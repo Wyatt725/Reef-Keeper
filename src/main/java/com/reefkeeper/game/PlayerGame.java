@@ -1,5 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026. Complete as given.
 package com.reefkeeper.game;
 
 import java.time.Instant;
@@ -10,9 +9,6 @@ import java.util.Optional;
 
 /**
  * Everything about one player's game: their aquarium and their deliveries.
- *
- * Week 5: one PlayerGame is kept in each browser's HttpSession.
- * Week 6: it is saved in the database and linked to the player's account.
  */
 public class PlayerGame {
 

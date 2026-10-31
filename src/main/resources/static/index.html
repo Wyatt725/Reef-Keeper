@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Source: skeleton generated with Claude (Anthropic AI), 15 and 29 Oct 2026. Complete as given.
-  The aquarium screen (wireframe 02), with the delivery (03) and place-the-fish (05) panels.
-  Week 6: shows who is logged in, has a log-out button, and loads account.js before aquarium.js.
 -->
 <html lang="en">
 <head>
@@ -12,23 +9,10 @@
     <title>Reef Keeper</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="ui.css">
 </head>
 <body>
-<header class="topbar">
-    <h1>Reef Keeper</h1>
-    <div class="stats">
-        <span>Coins: <strong id="coins">-</strong></span>
-        <span>Aquarium value: <strong id="value">-</strong></span>
-    </div>
-    <div class="player">
-        <span>Keeper: <strong id="player-name">-</strong></span>
-        <!-- Logging out is a POST with the CSRF token, so another site can't log you out -->
-        <form method="post" action="/logout">
-            <input type="hidden" name="_csrf">
-            <button type="submit">Log out</button>
-        </form>
-    </div>
-</header>
+<header id="topbar" class="topbar" data-page="aquarium"></header>
 
 <main class="game">
     <p id="message" class="message" aria-live="polite"></p>
@@ -58,6 +42,21 @@
         </form>
     </section>
 
+    <!-- Treasure check after a right count (wireframe 04). Opened by showTreasureCheck() in treasure.js. -->
+    <section id="treasure-panel" class="panel treasure" hidden>
+        <div class="panel-head">
+            <h2>Correct! <span id="treasure-fish"></span> fish accepted.</h2>
+            <span class="soon">Chest check coming in Week 9</span>
+        </div>
+        <img id="treasure-image" alt="The same delivery crate: count the treasure chests">
+        <label for="chest-input">Bonus: how many treasure chests? <span class="hint">Each chest becomes a decoration.</span></label>
+        <div class="row">
+            <input id="chest-input" type="number" min="0" max="99" disabled>
+            <button type="button" disabled>Check</button>
+            <button id="treasure-skip" type="button">Skip</button>
+        </div>
+    </section>
+
     <!-- Accepted fish waiting for a tank (wireframe 05). Filled in by renderGame(). -->
     <section id="place-panel" class="panel" hidden>
         <h2>Where should the <span id="place-fish"></span> new fish go?</h2>
@@ -67,9 +66,12 @@
     <!-- The tanks (wireframe 02, note 4). Filled in by renderGame(). -->
     <h2>Your tanks</h2>
     <section id="tanks" class="tanks"></section>
+    <a class="add-tank" href="shop.html">+ Buy another tank</a>
 </main>
 
 <script src="account.js"></script>
+<script src="nav.js"></script>
+<script src="treasure.js"></script>
 <script src="aquarium.js"></script>
 </body>
 </html>

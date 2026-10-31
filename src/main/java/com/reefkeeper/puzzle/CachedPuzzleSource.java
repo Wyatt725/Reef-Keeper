@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: starter skeleton generated with Claude (Anthropic AI), 8 Oct 2026.
-// Design: the Decorator pattern (wraps another PuzzleSource and adds behaviour).
 package com.reefkeeper.puzzle;
 
 import java.util.ArrayList;

@@ -1,5 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 29 Oct 2026. Complete as given.
 // Used on the login, register and aquarium pages.
 
 /**

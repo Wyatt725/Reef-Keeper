@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--
+  Reef Keeper - CIS045-3 coursework.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reef Keeper - Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<header id="topbar" class="topbar" data-page="shop"></header>
+
+<main>
+    <div class="page-head">
+        <h2>Shop</h2>
+        <span class="hint">More tanks mean room for bigger deliveries.</span>
+    </div>
+
+    <section class="shop-items">
+        <article class="shop-item">
+            <h3>Small tank</h3>
+            <div class="hint">Holds 10 fish.</div>
+            <div class="price">50 coins</div>
+            <span class="soon">Coming in Week 7</span>
+            <button type="button" disabled>Buy</button>
+        </article>
+        <article class="shop-item">
+            <h3>Large tank</h3>
+            <div class="hint">Holds 25 fish.</div>
+            <div class="price">150 coins</div>
+            <span class="soon">Coming in Week 7</span>
+            <button type="button" disabled>Buy</button>
+        </article>
+        <article class="shop-item">
+            <h3>Feed all hungry tanks</h3>
+            <div class="hint">Refills the food in every hungry tank.</div>
+            <div class="price">5 coins per tank</div>
+            <span class="soon">Coming in Week 9</span>
+            <button type="button" disabled>Buy</button>
+        </article>
+    </section>
+
+    <p><a class="add-tank" href="/">Back to your aquarium</a></p>
+</main>
+
+<script src="account.js"></script>
+<script src="nav.js"></script>
+</body>
+</html>

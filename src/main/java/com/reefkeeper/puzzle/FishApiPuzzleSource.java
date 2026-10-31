@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: starter skeleton generated with Claude (Anthropic AI), 8 Oct 2026.
-// JSON parsing uses the Jackson library (com.fasterxml.jackson), included with Spring Boot.
 package com.reefkeeper.puzzle;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,9 +10,6 @@ import java.util.Base64;
 
 /**
  * Gets puzzles from the live Fish API and converts each reply into a Puzzle.
- *
- * Expected reply (check it yourself by opening FishApiClient.DEFAULT_URL in a browser):
- *   { "question": "<image URL or base64 PNG>", "fish": 8, "chest": 4 }
  *
  * Security note: an image URL from the API ends in something like _004x008.png,
  * i.e. it contains the chest and fish counts. So we never pass that URL to the

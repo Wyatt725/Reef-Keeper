@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: starter skeleton generated with Claude (Anthropic AI), 8 Oct 2026.
-// Uses java.net.http.HttpClient from the Java standard library (Java 11+).
 package com.reefkeeper.puzzle;
 
 import java.io.IOException;

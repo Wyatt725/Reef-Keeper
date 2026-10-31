@@ -1,5 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026. Complete as given: no TODOs here.
 package com.reefkeeper.game;
 
 /** The two kinds of tank a player can own, with how many fish they hold and what they cost. */

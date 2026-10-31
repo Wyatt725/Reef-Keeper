@@ -29,4 +29,3 @@ public class AccountUserDetailsService implements UserDetailsService {
     	return store.findByUsername(username).map(account -> User.withUsername(account.getUsername()).password(account.getPasswordHash()).roles("PLAYER").build()).orElseThrow(() -> new UsernameNotFoundException("No player called " + username));
     }
 }
-// Note: Eclipse marks the User import as "never used" (yellow) until you write step 2. That is fine.

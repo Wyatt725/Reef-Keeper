@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026.
-// Methods marked TODO are written by me.
 package com.reefkeeper.listeners;
 
 import com.reefkeeper.game.events.DeliveryAcceptedEvent;
@@ -16,9 +14,7 @@ import org.springframework.stereotype.Component;
  * Reacts to game events by writing a line to the Eclipse Console.
  *
  * The game never calls this class: it only publishes events, and Spring delivers each
- * event to every @EventListener method whose parameter type matches. In Week 7 an
- * IncomeListener and in Week 9 a leaderboard listener are added the same way,
- * without changing DeliveryService at all.
+ * event to every @EventListener method whose parameter type matches.
  */
 @Component
 public class DeliveryLogListener {
