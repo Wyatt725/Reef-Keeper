@@ -47,12 +47,13 @@ public class Tank {
     }
 
     public void addFish(int fish) {
-        if (fish < 0) {
+    	if (fish < 0) {
         	throw new IllegalArgumentException("Fish count cannot be negative");
         }
         if (!canHold(fish)) {
         	throw new IllegalStateException("Not enough space in the tank");
         }
+        fishCount += fish;
     }
 
     /** Used in Week 9 by the treasure check. Given. */
