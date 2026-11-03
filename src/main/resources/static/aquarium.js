@@ -9,36 +9,6 @@
 /** Shortcut for document.getElementById. */
 const el = (id) => document.getElementById(id);
 
-/**
- * Calls our Java server and returns { ok, status, data }.
- */
-async function api(method, url, body) {
-    const options = { method, headers: {} };
-    if (body !== undefined) {
-        options.headers['Content-Type'] = 'application/json';
-        options.body = JSON.stringify(body);
-    }
-    // every request that changes something must carry the CSRF token
-    // (csrfToken() is in account.js, which index.html loads before this file)
-    if (method !== 'GET') {
-        options.headers['X-XSRF-TOKEN'] = csrfToken();
-    }
-    const response = await fetch(url, options);
-	
-    // not logged in, or the session ended -> back to the login page
-    if (response.status === 401) {
-        window.location.href = '/login.html';
-        return { ok: false, status: 401, data: { error: 'Please log in' } };
-    }
-    let data = null;
-    try {
-        data = await response.json();
-    } catch (e) {
-        data = { error: 'The server sent no JSON (HTTP ' + response.status + ')' };
-    }
-    return { ok: response.ok, status: response.status, data };
-}
-
 /** Shows a message above the banner. kind: 'correct', 'wrong' or '' (plain). */
 function showMessage(text, kind) {
     el('message').textContent = text;
@@ -61,6 +31,8 @@ function renderGame(view) {
     const min = Math.floor(view.secondsUntilNextDelivery / 60);
     const sec = String(view.secondsUntilNextDelivery % 60).padStart(2, '0');
     el('next-in').textContent = min + ':' + sec;
+	el('income').textContent = view.incomePerVisit;
+	el('visit-in').textContent = view.secondsUntilVisitors + ' s';
     el('open-delivery').disabled = view.waitingDeliveries === 0 && openDelivery === null;
 
     // Tanks

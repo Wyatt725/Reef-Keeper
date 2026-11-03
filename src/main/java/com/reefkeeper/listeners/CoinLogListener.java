@@ -1,6 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 3 Nov 2026.
-// Methods marked TODO are written by me.
 package com.reefkeeper.listeners;
 
 import com.reefkeeper.game.events.TankBoughtEvent;

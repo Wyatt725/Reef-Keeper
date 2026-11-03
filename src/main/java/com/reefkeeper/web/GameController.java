@@ -10,6 +10,8 @@ import com.reefkeeper.web.ApiModels.DeliveryView;
 import com.reefkeeper.web.ApiModels.GameView;
 import com.reefkeeper.web.ApiModels.PlaceRequest;
 import com.reefkeeper.store.PlayerGameStore;
+import com.reefkeeper.game.CoinService;
+import com.reefkeeper.web.ApiModels.BuyTankRequest;
 import java.security.Principal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,30 +32,36 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api")
 public class GameController {
 
-    private final DeliveryService deliveries;
+	private final DeliveryService deliveries;
+    private final CoinService coinService;
     private final Clock clock;
     private final PlayerGameStore games;
 
-    public GameController(DeliveryService deliveries, Clock clock, PlayerGameStore games) {
+    public GameController(DeliveryService deliveries, CoinService coinService, Clock clock, PlayerGameStore games) {
         this.deliveries = deliveries;
+        this.coinService = coinService;
         this.clock = clock;
         this.games = games;
     }
 
-    /**
-     * The logged-in player's game. Spring Security puts the logged-in user into the
-     * Principal, and the PlayerGameStore keeps one game per username, so the aquarium
-     * now belongs to the account instead of the browser.
-     */
+    /** The logged-in player's game, with the visitors' coins brought up to date. */
     private PlayerGame currentGame(Principal principal) {
-        return games.gameFor(principal.getName());
+        PlayerGame game = games.gameFor(principal.getName());
+        coinService.collectIncome(game); // pay for the visits since the last request
+        return game;
+    }
+    
+    /** The GameView for this game right now. also says what the visitors pay and when. */
+    private GameView view(PlayerGame game) {
+        return GameView.of(game, deliveries.timeUntilNextDelivery(game),
+                coinService.timeUntilVisitors(game), coinService.incomePerVisit(game));
     }
 
     @GetMapping("/game")
     public GameView getGame(Principal principal) {
         PlayerGame game = currentGame(principal);
         deliveries.catchUp(game);
-        return GameView.of(game, deliveries.timeUntilNextDelivery(game));
+        return view(game);
     }
     
     /**
@@ -85,7 +93,17 @@ public class GameController {
     	PlayerGame game = currentGame(principal);
         deliveries.placeFish(game, id, request.tankId());
         deliveries.catchUp(game);
-        return GameView.of(game, deliveries.timeUntilNextDelivery(game));
+        return view(game);
+    }
+    
+    @PostMapping("/tanks")
+    public GameView buyTank(@RequestBody BuyTankRequest request, Principal principal) {
+    	if (request.size() == null) {
+            throw new IllegalArgumentException("Choose a tank size: SMALL or LARGE");
+        }
+        PlayerGame game = currentGame(principal);
+        coinService.buyTank(game, request.size());
+        return view(game);
     }
 
     @ExceptionHandler(IllegalStateException.class)
