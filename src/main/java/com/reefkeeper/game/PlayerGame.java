@@ -8,18 +8,22 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Everything about one player's game: their aquarium and their deliveries.
+ * Everything about one player's game: their aquarium, their deliveries, and the two
+ * timestamps the game is worked out from (last delivery, last visitors).
  */
 public class PlayerGame {
 
     private final Aquarium aquarium;
     private final List<Delivery> deliveries = new ArrayList<>();
     private Instant lastDeliveryAt;
+    private Instant lastIncomeAt;
     private int nextDeliveryId = 1;
 
-    public PlayerGame(Aquarium aquarium, Instant lastDeliveryAt) {
+    /** A game that starts at {@code startedAt}: deliveries and visitors are both counted from then. */
+    public PlayerGame(Aquarium aquarium, Instant startedAt) {
         this.aquarium = aquarium;
-        this.lastDeliveryAt = lastDeliveryAt;
+        this.lastDeliveryAt = startedAt;
+        this.lastIncomeAt = startedAt;
     }
 
     public Aquarium getAquarium() {
@@ -33,6 +37,15 @@ public class PlayerGame {
 
     void setLastDeliveryAt(Instant lastDeliveryAt) {
         this.lastDeliveryAt = lastDeliveryAt;
+    }
+
+    /** When visitors last paid. The next visit is due CoinService.VISIT_INTERVAL after this. Week 7. */
+    public Instant getLastIncomeAt() {
+        return lastIncomeAt;
+    }
+
+    void setLastIncomeAt(Instant lastIncomeAt) {
+        this.lastIncomeAt = lastIncomeAt;
     }
 
     public List<Delivery> getDeliveries() {

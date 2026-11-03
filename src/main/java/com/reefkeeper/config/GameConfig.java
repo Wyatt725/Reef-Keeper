@@ -1,7 +1,9 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026. Complete as given.
+// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; CoinService bean added 3 Nov 2026.
+// Complete as given.
 package com.reefkeeper.config;
 
+import com.reefkeeper.game.CoinService;
 import com.reefkeeper.game.DeliveryService;
 import com.reefkeeper.game.GameEventPublisher;
 import com.reefkeeper.puzzle.PuzzleSource;
@@ -21,12 +23,23 @@ public class GameConfig {
         return Clock.systemUTC();
     }
 
+    /**
+     * Adapter: our small GameEventPublisher interface, implemented by Spring's event system.
+     * Every event published by the game reaches any @EventListener method in the app.
+     */
     @Bean
-    public DeliveryService deliveryService(PuzzleSource puzzles, Clock clock,
-                                           ApplicationEventPublisher springEvents) {
-        // Adapter: our small GameEventPublisher interface, implemented by Spring's event system.
-        // Every event published by the game reaches any @EventListener method in the app.
-        GameEventPublisher events = springEvents::publishEvent;
+    public GameEventPublisher gameEventPublisher(ApplicationEventPublisher springEvents) {
+        return springEvents::publishEvent;
+    }
+
+    @Bean
+    public DeliveryService deliveryService(PuzzleSource puzzles, Clock clock, GameEventPublisher events) {
         return new DeliveryService(puzzles, clock, events);
+    }
+
+    /** Week 7: the coin rules share the same clock and the same event publisher. */
+    @Bean
+    public CoinService coinService(Clock clock, GameEventPublisher events) {
+        return new CoinService(clock, events);
     }
 }

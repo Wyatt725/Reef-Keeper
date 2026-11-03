@@ -1,10 +1,13 @@
 // Reef Keeper - CIS045-3 coursework.
+// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; visitor fields and
+// BuyTankRequest added 3 Nov 2026. Complete as given.
 package com.reefkeeper.web;
 
 import com.reefkeeper.game.Delivery;
 import com.reefkeeper.game.DeliveryStatus;
 import com.reefkeeper.game.PlayerGame;
 import com.reefkeeper.game.Tank;
+import com.reefkeeper.game.TankSize;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -35,18 +38,24 @@ public final class ApiModels {
     public record PendingFish(int deliveryId, int fish) {
     }
 
-    /** Everything the aquarium screen needs. */
+    /**
+     * Everything the aquarium screen needs.
+     * Week 7 added incomePerVisit (coins each visit pays now) and secondsUntilVisitors.
+     */
     public record GameView(int coins, int value, List<TankView> tanks, int waitingDeliveries,
-                           long secondsUntilNextDelivery, List<PendingFish> fishToPlace) {
+                           long secondsUntilNextDelivery, List<PendingFish> fishToPlace,
+                           int incomePerVisit, long secondsUntilVisitors) {
 
-        public static GameView of(PlayerGame game, Duration untilNextDelivery) {
+        public static GameView of(PlayerGame game, Duration untilNextDelivery,
+                                  Duration untilVisitors, int incomePerVisit) {
             List<TankView> tanks = game.getAquarium().getTanks().stream().map(TankView::of).toList();
             List<PendingFish> toPlace = game.deliveriesWithStatus(DeliveryStatus.ACCEPTED).stream()
                     .map(d -> new PendingFish(d.getId(), d.fishCount()))
                     .toList();
             return new GameView(game.getAquarium().getCoins(), game.getAquarium().value(), tanks,
                     game.deliveriesWithStatus(DeliveryStatus.WAITING).size(),
-                    untilNextDelivery.toSeconds(), toPlace);
+                    untilNextDelivery.toSeconds(), toPlace,
+                    incomePerVisit, untilVisitors.toSeconds());
         }
     }
 
@@ -69,5 +78,13 @@ public final class ApiModels {
 
     /** Body of POST /api/deliveries/{id}/place, e.g. {"tankId": 1}. */
     public record PlaceRequest(int tankId) {
+    }
+
+    /**
+     * Body of POST /api/tanks, e.g. {"size": "SMALL"}. Week 7.
+     * Jackson turns the text "SMALL" or "LARGE" into the TankSize enum by itself.
+     * Note what is NOT in here: a price. The server decides what a tank costs, never the browser.
+     */
+    public record BuyTankRequest(TankSize size) {
     }
 }

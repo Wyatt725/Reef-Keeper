@@ -117,8 +117,6 @@ async function loadGame() {
     renderGame(game);
 }
 
-// ---------- TODO: the four event handlers ----------
-
 /**
  *Runs when "Open delivery" is clicked.
  */

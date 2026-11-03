@@ -12,6 +12,7 @@ public class Aquarium {
     public static final int STARTING_COINS = 50;
     public static final int VALUE_PER_FISH = 10;
     public static final int VALUE_PER_DECORATION = 25;
+    public static final int MAX_TANKS = 6;
 
     private final List<Tank> tanks = new ArrayList<>();
     private int coins;
@@ -66,5 +67,28 @@ public class Aquarium {
         int tankValue = tanks.stream().mapToInt(tank -> tank.getSize().price()).sum();
         
         return fishValue + decorationValue + tankValue;
+    }
+    
+    /** Week 7. Visitors' coins go in here. Given. */
+    public void addCoins(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("amount must not be negative");
+        }
+        coins += amount;
+    }
+
+    /**
+     * Buys a new tank of the given size with coins and returns it.
+     */
+    public Tank buyTank(TankSize size) {
+    	if (tanks.size() >= MAX_TANKS) {
+            throw new IllegalStateException("Your aquarium is full: " + MAX_TANKS + " tanks at most");
+        }
+        if (coins < size.price()) {
+            throw new IllegalStateException("Not enough coins: a " + size.label().toLowerCase() + " costs " + size.price());
+        }
+        
+        coins -= size.price();
+        return addTank(size);
     }
 }
