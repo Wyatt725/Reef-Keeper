@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 //
 // It appears after a right fish count and before the place-the-fish panel. 
 // The player gets ONE try at counting the chests in the

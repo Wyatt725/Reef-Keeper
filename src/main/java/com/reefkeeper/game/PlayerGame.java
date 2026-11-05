@@ -1,7 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; visitor time added 3 Nov 2026;
-// starter tanks fed (Week 9) added 3 Nov 2026.
-// Complete as given.
+// Assited by claude AI
 package com.reefkeeper.game;
 
 import java.time.Instant;

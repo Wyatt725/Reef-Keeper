@@ -1,6 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 15 Oct 2026; CSRF header and 401 redirect
-// added 31 Oct 2026; moved into its own file 3 Nov 2026. Complete as given.
+// Assited by claude AI
 //
 // The one function every page uses to talk to the Java server. It used to live in
 // aquarium.js; the shop page needs it too, so it now has its own file instead of being

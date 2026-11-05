@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.DeliveryAcceptedEvent;
@@ -58,11 +59,12 @@ class DeliveryServiceTest {
     }
 
     @Test
-    void openDeliveryExpiresAfterItsDeadline() {
-        Delivery delivery = new Delivery(1, START);
-        delivery.open(new Puzzle("img", 3, 0), START.plusSeconds(30));
-        assertFalse(delivery.isExpired(START.plusSeconds(30)));
-        assertTrue(delivery.isExpired(START.plusSeconds(31)));
+    void openingADeliveryGivesAPictureAndTheAnswerTimeAsDeadline() {
+        Delivery delivery = service.openNext(game);
+        assertEquals(DeliveryStatus.OPEN, delivery.getStatus());
+        assertNotNull(delivery.getPuzzle());
+        assertEquals(START.plus(DeliveryService.ANSWER_TIME), delivery.getDeadline());
+        assertEquals(0, waiting());
     }
 
     // ---- Step 4: catchUp

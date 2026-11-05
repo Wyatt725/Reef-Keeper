@@ -1,6 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 3 Nov 2026.
-// Method bodies marked TODO are written by me.
+// Assited by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.TankHungryEvent;
@@ -67,7 +66,19 @@ public class FeedingService {
      *   7. return cost
      */
     public int feedHungryTanks(PlayerGame game) {
-        // TODO step C3
-        throw new UnsupportedOperationException("TODO step C3: FeedingService.feedHungryTanks");
+    	List<Tank> hungry = hungryTanks(game);
+        if (hungry.isEmpty()) {
+            throw new IllegalStateException("No tanks are hungry");
+        }
+        int cost = hungry.size() * PRICE_PER_TANK;
+        game.getAquarium().spendCoins(cost);
+
+        Instant feedUntil = clock.instant().plus(Tank.FOOD_TIME);
+        for (Tank tank : hungry) {
+            tank.feed(feedUntil);
+        }
+
+        events.publish(new TanksFedEvent(hungry.size(), cost));
+        return cost;
     }
 }

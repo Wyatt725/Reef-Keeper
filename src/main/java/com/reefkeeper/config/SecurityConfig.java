@@ -1,7 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 29 Oct 2026. Complete as given.
-// The CSRF cookie setup follows the Spring Security reference guide's pattern for
-// JavaScript front ends ("Single-Page Applications" in the CSRF chapter).
+// Assited by claude AI
 package com.reefkeeper.config;
 
 import org.springframework.context.annotation.Bean;

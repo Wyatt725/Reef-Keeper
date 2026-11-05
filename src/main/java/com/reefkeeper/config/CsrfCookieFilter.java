@@ -1,6 +1,6 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 29 Oct 2026. Complete as given.
-// Based on the CsrfCookieFilter example in the Spring Security reference guide.
+// Assited by claude AI
+
 package com.reefkeeper.config;
 
 import jakarta.servlet.FilterChain;

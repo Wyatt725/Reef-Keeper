@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 29 Oct 2026. These tests describe step 1.
+// Assited by claude AI
 package com.reefkeeper.auth;
 
 import org.junit.jupiter.api.BeforeEach;

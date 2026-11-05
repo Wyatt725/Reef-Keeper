@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 //
 // Event-driven: nothing here runs on its own. Every function runs because an event
 // happened: the page loaded, a button was clicked, the form was submitted, a timer
@@ -36,25 +37,31 @@ function renderGame(view) {
     el('open-delivery').disabled = view.waitingDeliveries === 0 && openDelivery === null;
 
     // Tanks
-    const tanks = el('tanks');
-    tanks.replaceChildren();
-    for (const tank of view.tanks) {
-        const card = document.createElement('div');
-        card.className = 'tank';
-        const title = document.createElement('h3');
-        title.textContent = tank.name + ' ' + tank.id;
-        const fish = document.createElement('div');
-        fish.textContent = tank.fishCount + ' / ' + tank.capacity + ' fish';
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        const fill = document.createElement('span');
-        fill.style.width = Math.round(100 * tank.fishCount / tank.capacity) + '%';
-        bar.append(fill);
-        const decor = document.createElement('div');
-        decor.className = 'hint';
-        decor.textContent = 'Decorations: ' + tank.decorations;
-        card.append(title, fish, bar, decor);
-        tanks.append(card);
+	const tanks = el('tanks');
+	tanks.replaceChildren();
+	for (const tank of view.tanks) {
+	    const card = document.createElement('div');
+	    card.className = 'tank';
+	    const title = document.createElement('h3');
+	    title.textContent = tank.name + ' ' + tank.id;
+	    const fish = document.createElement('div');
+	    fish.textContent = tank.fishCount + ' / ' + tank.capacity + ' fish';
+	    const bar = document.createElement('div');
+	    bar.className = 'bar';
+	    const fill = document.createElement('span');
+	    fill.style.width = Math.round(100 * tank.fishCount / tank.capacity) + '%';
+	    bar.append(fill);
+	    const decor = document.createElement('div');
+	    decor.className = 'hint';
+	    decor.textContent = 'Decorations: ' + tank.decorations;
+	    // Week 9: how much food is left, or that the tank is hungry
+	    const food = document.createElement('div');
+	    food.className = tank.hungry ? 'food hungry' : 'food';
+	    food.textContent = tank.hungry
+	        ? 'Hungry! Visitors pay nothing for this tank'
+	        : 'Food: ' + Math.ceil(tank.foodSecondsLeft / 60) + ' min left';
+	    card.append(title, fish, bar, food, decor);
+	    tanks.append(card);
     }
 
     // Fish waiting for a tank: one button per tank that has room
@@ -112,7 +119,7 @@ async function openNextDelivery() {
 }
 
 /**
- * Shows the 30-second countdown.
+ * Shows the 15-second countdown.
  */
 function startCountdown(seconds) {
 	if (countdownTimer) {

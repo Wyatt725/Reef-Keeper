@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 3 Nov 2026. These tests describe steps A1 and A2.
+// Assited by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.TreasureFoundEvent;

@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 29 Oct 2026. These tests describe step 3.
+// Assited by claude AI
 package com.reefkeeper.store;
 
 import com.reefkeeper.game.DeliveryService;

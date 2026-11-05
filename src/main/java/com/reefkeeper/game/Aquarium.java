@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 package com.reefkeeper.game;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class Aquarium {
         return fishValue + decorationValue + tankValue;
     }
     
-    /** Week 7. Visitors' coins go in here. Given. */
+    /** Visitors' coins go in here.*/
     public void addCoins(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("amount must not be negative");

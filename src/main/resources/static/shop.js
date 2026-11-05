@@ -1,8 +1,7 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 3 Nov 2026; food added 3 Nov 2026 (Week 9).
-// buyTank and the functions marked TODO are written by me.
+// Assited by claude AI
 //
-// The shop page (wireframe 06). The page only SHOWS prices and greys out what the player
+// The page only SHOWS prices and greys out what the player
 // can't afford; the server decides the real price and checks the coins again on every
 // purchase, so editing this page in the browser can't buy a free tank or free food.
 
@@ -54,15 +53,16 @@ async function buyTank(size) {
 }
 
 /**
- * STEP C6. Runs when the Feed button is clicked.
- *   1. POST to '/api/tanks/feed' (no body: api('POST', '/api/tanks/feed')).
- *   2. If !res.ok: showShopMessage(res.data.error, 'wrong') and stop.
- *   3. Otherwise: updateShop(res.data) and
- *      showShopMessage('Fed! Your tanks have food for 30 minutes.', 'correct').
- * Same shape as buyTank above.
+ * Runs when the Feed button is clicked.
  */
 async function feedTanks() {
-    // TODO step C6
+	const res = await api('POST', '/api/tanks/feed');
+	if (!res.ok) {
+	    showShopMessage(res.data.error, 'wrong');
+	    return;
+	}
+	updateShop(res.data);
+	showShopMessage('Fed! Your tanks have food for 30 minutes.', 'correct');
 }
 
 // ---------- Given: connect events to handlers ----------

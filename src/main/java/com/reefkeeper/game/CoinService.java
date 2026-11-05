@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.TankBoughtEvent;
@@ -37,7 +38,7 @@ public class CoinService {
 
     /** How many coins one visit pays right now. Given. */
     public int incomePerVisit(PlayerGame game) {
-        return game.getAquarium().totalFish() * COINS_PER_FISH;
+    	return game.getAquarium().fishInFedTanks(clock.instant()) * COINS_PER_FISH;
     }
 
     /** How long until the next visit (never negative). Given: same idea as timeUntilNextDelivery. */
@@ -52,14 +53,14 @@ public class CoinService {
      */
     public int collectIncome(PlayerGame game) {
     	Instant now = clock.instant();
-        int visits = 0;
+    	int visits = 0;
+        int coins = 0;
 
         while (!game.getLastIncomeAt().plus(VISIT_INTERVAL).isAfter(now)) {
             game.setLastIncomeAt(game.getLastIncomeAt().plus(VISIT_INTERVAL));
             visits++;
+            coins += game.getAquarium().fishInFedTanks(game.getLastIncomeAt()) * COINS_PER_FISH;
         }
-
-        int coins = visits * incomePerVisit(game);
 
         if (coins > 0) {
             game.getAquarium().addCoins(coins);
@@ -74,6 +75,7 @@ public class CoinService {
      */
     public Tank buyTank(PlayerGame game, TankSize size) {
     	Tank tank = game.getAquarium().buyTank(size);
+    	tank.feed(clock.instant().plus(Tank.FOOD_TIME));
         events.publish(new TankBoughtEvent(tank.getId(), size, size.price()));
         return tank;
     }

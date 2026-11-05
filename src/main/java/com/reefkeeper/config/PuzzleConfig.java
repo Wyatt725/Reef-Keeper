@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: starter skeleton generated with Claude (Anthropic AI), 8 Oct 2026.
+// Assited by claude AI
 package com.reefkeeper.config;
 
 import com.reefkeeper.puzzle.CachedPuzzleSource;

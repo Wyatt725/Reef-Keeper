@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 
 (function buildTopBar() {
     const bar = document.getElementById('topbar');

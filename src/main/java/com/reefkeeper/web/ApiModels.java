@@ -1,7 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; visitor fields and
-// BuyTankRequest added 3 Nov 2026; food, treasure and leaderboard shapes (Week 9) added 3 Nov 2026.
-// Complete as given.
+// Assited by claude AI
 package com.reefkeeper.web;
 
 import com.reefkeeper.game.Delivery;

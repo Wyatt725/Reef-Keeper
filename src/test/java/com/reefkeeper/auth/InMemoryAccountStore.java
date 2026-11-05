@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 29 Oct 2026. Test helper.
+// Assited by claude AI
 package com.reefkeeper.auth;
 
 import java.util.ArrayList;

@@ -1,4 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
+// Assited by claude AI
 
 /** Makes one table row for a leaderboard entry. isMe highlights it. Given. */
 function makeRow(entry, isMe) {
