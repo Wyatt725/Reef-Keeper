@@ -1,10 +1,4 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 31 Oct 2026; every player's ranking added 3 Nov 2026.
-// Functions marked TODO are written by me.
-//
-// Leaderboard page (wireframe 07). GET /api/leaderboard gives a LeaderboardView:
-//   { top: [ {rank, username, fish, decorations, value}, ... up to 10 ],
-//     me:  {rank, username, fish, decorations, value} }
 
 /** Makes one table row for a leaderboard entry. isMe highlights it. Given. */
 function makeRow(entry, isMe) {
@@ -33,15 +27,22 @@ function makeGapRow() {
 }
 
 /**
- * STEP B2. Fills the table from a LeaderboardView.
- *   1. const rows = document.getElementById('board-rows'); then rows.replaceChildren() to empty it.
- *   2. For each entry in board.top: rows.append(makeRow(entry, entry.username === board.me.username))
- *   3. If you are NOT in the top list (no entry in board.top has your username), add
- *      makeGapRow() and then makeRow(board.me, true) at the end, so you always see your own rank.
- * Hint for 3: board.top.some(entry => entry.username === board.me.username) is true if you are in it.
+ * Fills the table from a LeaderboardView.
  */
 function renderBoard(board) {
-    // TODO step B2
+	const rows = document.getElementById('board-rows');
+	rows.replaceChildren();
+
+	for (const entry of board.top) {
+	    const isMe = entry.username === board.me.username;
+	    rows.append(makeRow(entry, isMe));
+	}
+
+	const inTop = board.top.some(entry => entry.username === board.me.username);
+	if (!inTop) {
+	    rows.append(makeGapRow());
+	    rows.append(makeRow(board.me, true));
+	}
 }
 
 /** Loads the leaderboard and draws it. Given. */
