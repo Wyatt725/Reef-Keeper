@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
+  Source: generated with Claude (Anthropic AI), 31 Oct 2026; every player's ranking added 3 Nov 2026. Complete as given.
+  Leaderboard screen (wireframe 07): the top 10 aquariums by value, plus your own row.
 -->
 <html lang="en">
 <head>
@@ -17,21 +19,18 @@
 <main>
     <div class="page-head">
         <h2>Top aquariums</h2>
+        <span class="hint">Your row is highlighted.</span>
     </div>
+
+    <p id="board-message" class="message" aria-live="polite"></p>
 
     <div class="table-wrap">
         <table class="board">
             <thead>
             <tr><th>Rank</th><th>Keeper</th><th>Fish</th><th>Decorations</th><th>Value</th></tr>
             </thead>
-            <tbody>
-            <tr class="me">
-                <td>-</td>
-                <td>You (<span id="my-name">-</span>)</td>
-                <td id="my-fish">-</td>
-                <td id="my-decorations">-</td>
-                <td id="my-value">-</td>
-            </tr>
+            <tbody id="board-rows">
+            <tr><td colspan="5" class="later">Loading...</td></tr>
             </tbody>
         </table>
     </div>
@@ -42,6 +41,7 @@
 
 <script src="account.js"></script>
 <script src="nav.js"></script>
+<script src="api.js"></script>
 <script src="leaderboard.js"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 package com.reefkeeper.store;
 
 import com.reefkeeper.game.PlayerGame;
+import java.util.Map;
 
 /**
  * Finds the game that belongs to a player. GameController only knows this interface,
@@ -11,4 +12,5 @@ public interface PlayerGameStore {
 
     /** This player's game, starting a new one the first time they play. */
     PlayerGame gameFor(String username);
+    Map<String, PlayerGame> allGames();
 }

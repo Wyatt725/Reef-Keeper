@@ -1,11 +1,13 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; CoinService bean added 3 Nov 2026.
-// Complete as given.
+// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; CoinService bean added 3 Nov 2026;
+// FeedingService and LeaderboardService beans (Week 9) added 3 Nov 2026. Complete as given.
 package com.reefkeeper.config;
 
 import com.reefkeeper.game.CoinService;
 import com.reefkeeper.game.DeliveryService;
+import com.reefkeeper.game.FeedingService;
 import com.reefkeeper.game.GameEventPublisher;
+import com.reefkeeper.game.LeaderboardService;
 import com.reefkeeper.puzzle.PuzzleSource;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -41,5 +43,17 @@ public class GameConfig {
     @Bean
     public CoinService coinService(Clock clock, GameEventPublisher events) {
         return new CoinService(clock, events);
+    }
+
+    /** Week 9: the food rules, same clock, same events. */
+    @Bean
+    public FeedingService feedingService(Clock clock, GameEventPublisher events) {
+        return new FeedingService(clock, events);
+    }
+
+    /** Week 9: ranks the aquariums. Needs nothing: it is given the games each time. */
+    @Bean
+    public LeaderboardService leaderboardService() {
+        return new LeaderboardService();
     }
 }

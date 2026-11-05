@@ -1,10 +1,12 @@
 // Reef Keeper - CIS045-3 coursework.
 // Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026; visitor fields and
-// BuyTankRequest added 3 Nov 2026. Complete as given.
+// BuyTankRequest added 3 Nov 2026; food, treasure and leaderboard shapes (Week 9) added 3 Nov 2026.
+// Complete as given.
 package com.reefkeeper.web;
 
 import com.reefkeeper.game.Delivery;
 import com.reefkeeper.game.DeliveryStatus;
+import com.reefkeeper.game.LeaderboardEntry;
 import com.reefkeeper.game.PlayerGame;
 import com.reefkeeper.game.Tank;
 import com.reefkeeper.game.TankSize;
@@ -25,32 +27,40 @@ public final class ApiModels {
     private ApiModels() {
     }
 
-    /** One tank as the browser sees it. */
-    public record TankView(int id, String name, int fishCount, int capacity, int decorations) {
+    /** One tank as the browser sees it. Week 9 added whether it is hungry and how much food is left. */
+    public record TankView(int id, String name, int fishCount, int capacity, int decorations,
+                           boolean hungry, long foodSecondsLeft) {
 
-        public static TankView of(Tank tank) {
+        public static TankView of(Tank tank, Instant now) {
             return new TankView(tank.getId(), tank.getSize().label(), tank.getFishCount(),
-                    tank.getCapacity(), tank.getDecorations());
+                    tank.getCapacity(), tank.getDecorations(),
+                    tank.isHungry(now), tank.foodLeft(now).toSeconds());
         }
     }
 
-    /** An accepted delivery whose fish still need a tank. Its fish count is no longer secret. */
-    public record PendingFish(int deliveryId, int fish) {
+    /**
+     * An accepted delivery whose fish still need a tank. Its fish count is no longer secret.
+     * Week 9: decorations = what the treasure check won; they go into the same tank.
+     */
+    public record PendingFish(int deliveryId, int fish, int decorations) {
     }
 
     /**
      * Everything the aquarium screen needs.
      * Week 7 added incomePerVisit (coins each visit pays now) and secondsUntilVisitors.
+     * Week 9: of() takes the time "now", so each tank can say whether it is hungry.
      */
     public record GameView(int coins, int value, List<TankView> tanks, int waitingDeliveries,
                            long secondsUntilNextDelivery, List<PendingFish> fishToPlace,
                            int incomePerVisit, long secondsUntilVisitors) {
 
-        public static GameView of(PlayerGame game, Duration untilNextDelivery,
+        public static GameView of(PlayerGame game, Instant now, Duration untilNextDelivery,
                                   Duration untilVisitors, int incomePerVisit) {
-            List<TankView> tanks = game.getAquarium().getTanks().stream().map(TankView::of).toList();
+            List<TankView> tanks = game.getAquarium().getTanks().stream()
+                    .map(tank -> TankView.of(tank, now))
+                    .toList();
             List<PendingFish> toPlace = game.deliveriesWithStatus(DeliveryStatus.ACCEPTED).stream()
-                    .map(d -> new PendingFish(d.getId(), d.fishCount()))
+                    .map(d -> new PendingFish(d.getId(), d.fishCount(), d.getDecorationsWon()))
                     .toList();
             return new GameView(game.getAquarium().getCoins(), game.getAquarium().value(), tanks,
                     game.deliveriesWithStatus(DeliveryStatus.WAITING).size(),
@@ -86,5 +96,23 @@ public final class ApiModels {
      * Note what is NOT in here: a price. The server decides what a tank costs, never the browser.
      */
     public record BuyTankRequest(TankSize size) {
+    }
+
+    /** Body of POST /api/deliveries/{id}/treasure, e.g. {"chests": 3}. Week 9. */
+    public record TreasureRequest(int chests) {
+    }
+
+    /**
+     * Answer to a treasure check: "CORRECT" or "WRONG", the real number of chests (safe to show
+     * now: each delivery's treasure can only be checked once), and the decorations won.
+     */
+    public record TreasureResponse(String result, int chests, int decorations) {
+    }
+
+    /**
+     * GET /api/leaderboard. Week 9. The top rows, plus the logged-in player's own row
+     * (me), which is null only if they have no aquarium yet.
+     */
+    public record LeaderboardView(List<LeaderboardEntry> top, LeaderboardEntry me) {
     }
 }

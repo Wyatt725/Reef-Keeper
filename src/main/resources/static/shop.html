@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Source: generated with Claude (Anthropic AI), 31 Oct 2026; Buy buttons connected 3 Nov 2026. Complete as given.
-  Shop screen (wireframe 06). Tanks can be bought from Week 7; fish food arrives in Week 9.
+  Source: generated with Claude (Anthropic AI), 31 Oct 2026; Buy buttons connected 3 Nov 2026;
+  food connected (Week 9) 3 Nov 2026. Complete as given.
+  Shop screen (wireframe 06): tanks (Week 7) and fish food (Week 9).
 -->
 <html lang="en">
 <head>
@@ -28,6 +29,7 @@
         <span>You have <strong id="shop-coins">-</strong> coins</span>
         <span>Visitors pay <strong id="shop-income">-</strong> coins a minute</span>
         <span><strong id="shop-tanks">-</strong> of 6 tanks</span>
+        <span><strong id="shop-hungry">-</strong> hungry</span>
     </section>
 
     <section class="shop-items">
@@ -45,10 +47,9 @@
         </article>
         <article class="shop-item">
             <h3>Feed all hungry tanks</h3>
-            <div class="hint">Refills the food in every hungry tank.</div>
+            <div class="hint">Feeds every hungry tank for 30 minutes. Visitors pay nothing for fish in a hungry tank.</div>
             <div class="price">5 coins per tank</div>
-            <span class="soon">Coming in Week 9</span>
-            <button type="button" disabled>Buy</button>
+            <button type="button" id="feed-button" disabled>Feed</button>
         </article>
     </section>
 

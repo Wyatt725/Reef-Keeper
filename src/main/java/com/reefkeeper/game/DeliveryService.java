@@ -5,6 +5,7 @@ import com.reefkeeper.game.events.DeliveryAcceptedEvent;
 import com.reefkeeper.game.events.DeliveryArrivedEvent;
 import com.reefkeeper.game.events.DeliveryReturnedEvent;
 import com.reefkeeper.game.events.FishPlacedEvent;
+import com.reefkeeper.game.events.TreasureFoundEvent;
 import com.reefkeeper.puzzle.Puzzle;
 import com.reefkeeper.puzzle.PuzzleSource;
 
@@ -26,7 +27,7 @@ import java.util.NoSuchElementException;
 public class DeliveryService {
 
     public static final Duration DELIVERY_INTERVAL = Duration.ofMinutes(3);
-    public static final Duration ANSWER_TIME = Duration.ofSeconds(30);
+    public static final Duration ANSWER_TIME = Duration.ofSeconds(15);
     public static final int MAX_WAITING = 3;
 
     private final PuzzleSource puzzles;
@@ -56,27 +57,12 @@ public class DeliveryService {
     }
 
     /**
-     * STEP 4. Brings the game up to date with the clock. Call it before showing or changing a game.
-     *
-     * Part A - new deliveries:
-     *   now = clock.instant()
-     *   while (lastDeliveryAt + DELIVERY_INTERVAL) is not after now:
-     *       move lastDeliveryAt forward by DELIVERY_INTERVAL (game.setLastDeliveryAt)
-     *       if fewer than MAX_WAITING deliveries are WAITING:
-     *           add a delivery that arrived at the new lastDeliveryAt (game.addDelivery)
-     *           publish a DeliveryArrivedEvent for it
-     *
-     * Part B - deliveries the player ran out of time on:
-     *   for every OPEN delivery that isExpired(now):
-     *       returnToSender() and publish DeliveryReturnedEvent with reason TOO_LATE
-     *
-     * Why a while loop and not an if: a player who comes back after 10 minutes has
-     * missed several deliveries, and each one has to be worked out.
+     * Brings the game up to date with the clock. Call it before showing or changing a game.
      */
     public void catchUp(PlayerGame game) {
     	Instant now = clock.instant();
 
-        // Part A - Catch up on missed deliveries based on the interval
+        // Catch up on missed deliveries based on the interval
         while (!game.getLastDeliveryAt().plus(DELIVERY_INTERVAL).isAfter(now)) {
             Instant newDeliveryTime = game.getLastDeliveryAt().plus(DELIVERY_INTERVAL);
             game.setLastDeliveryAt(newDeliveryTime);
@@ -91,7 +77,7 @@ public class DeliveryService {
             }
         }
 
-        // Part B - Handle expired open deliveries
+        // Handle expired open deliveries
         for (Delivery delivery : game.getDeliveries()) {
             if (delivery.getStatus() == DeliveryStatus.OPEN && delivery.isExpired(now)) {
                 delivery.returnToSender();
@@ -101,14 +87,7 @@ public class DeliveryService {
     }
 
     /**
-     * STEP 5. Opens the oldest waiting delivery and starts its 30-second countdown.
-     *
-     *   1. catchUp(game)
-     *   2. If a delivery is already OPEN, return that one (so reloading the page doesn't skip it).
-     *   3. Otherwise take the first WAITING delivery. If there is none,
-     *      throw new IllegalStateException("No deliveries waiting").
-     *   4. Get a puzzle from puzzles.nextPuzzle() and call delivery.open(puzzle, now + ANSWER_TIME).
-     *   5. Return the delivery.
+     * Opens the oldest waiting delivery and starts its 15-second countdown.
      */
     public Delivery openNext(PlayerGame game) {
     	catchUp(game);
@@ -136,16 +115,7 @@ public class DeliveryService {
     }
 
     /**
-     * STEP 6. Checks the player's fish count for an open delivery.
-     *
-     *   1. Find the delivery (game.findDelivery). Missing: throw NoSuchElementException.
-     *   2. If it is not OPEN: throw IllegalStateException.
-     *   3. If it isExpired(now): returnToSender(), publish DeliveryReturnedEvent(TOO_LATE),
-     *      return CountResult.TOO_LATE.
-     *   4. If count equals delivery.fishCount(): accept(), publish DeliveryAcceptedEvent,
-     *      return CountResult.CORRECT.
-     *   5. Otherwise: returnToSender(), publish DeliveryReturnedEvent(WRONG_COUNT),
-     *      return CountResult.WRONG.
+     * Checks the player's fish count for an open delivery.
      */
     public CountResult submitCount(PlayerGame game, int deliveryId, int count) {
     	Instant now = clock.instant();
@@ -175,16 +145,7 @@ public class DeliveryService {
     }
 
     /**
-     * STEP 7. Puts an accepted delivery's fish into the chosen tank.
-     *
-     *   1. Find the delivery and the tank (game.getAquarium().findTank).
-     *      Either missing: throw NoSuchElementException.
-     *   2. If the delivery is not ACCEPTED: throw IllegalStateException.
-     *   3. tank.addFish(delivery.fishCount())  - this throws by itself if they don't fit.
-     *   4. delivery.place() and publish a FishPlacedEvent.
-     *
-     * Order matters: add the fish BEFORE place(), so if the tank is full the
-     * delivery stays ACCEPTED and the player can buy a tank and try again.
+     *Puts an accepted delivery's fish into the chosen tank.
      */
     public void placeFish(PlayerGame game, int deliveryId, int tankId) {
     	Delivery delivery = game.findDelivery(deliveryId)
@@ -199,9 +160,25 @@ public class DeliveryService {
 
         // Add fish first; will throw an exception if it doesn't fit
         tank.addFish(delivery.fishCount());
+        tank.addDecorations(delivery.getDecorationsWon());
 
         delivery.place();
         events.publish(new FishPlacedEvent(delivery.getId(), tank.getId(), delivery.fishCount()));
     }
+    
+    /**
+     * The treasure check for an accepted delivery. Returns true if the chest count was right.
+     */
+    public boolean submitTreasure(PlayerGame game, int deliveryId, int chests) {
+    	Delivery delivery = game.findDelivery(deliveryId)
+                .orElseThrow(() -> new NoSuchElementException("Delivery " + deliveryId + " not found"));
+
+        boolean right = delivery.checkTreasure(chests);
+
+        if (right && delivery.getDecorationsWon() > 0) {
+            events.publish(new TreasureFoundEvent(deliveryId, delivery.getDecorationsWon()));
+        }
+
+        return right;
+    }
 }
-// Note: Eclipse will mark some imports as "never used" (yellow) until you write steps 4-7. That is fine.

@@ -156,7 +156,7 @@ async function sendCount(event) {
 	} else {
 	    if (res.data.result === 'CORRECT') {
 	        showMessage(`Correct! ${res.data.fish} fish accepted.`, 'correct');
-			showTreasureCheck(res.data.fish);
+			showTreasureCheck(res.data.fish, deliveryId);
 	    } else if (res.data.result === 'WRONG') {
 	        showMessage(`Not quite: there were ${res.data.fish} fish. Delivery returned.`, 'wrong');
 	    } else if (res.data.result === 'TOO_LATE') {

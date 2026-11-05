@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Source: skeleton generated with Claude (Anthropic AI), 15, 29 and 31 Oct and 3 Nov 2026. Complete as given.
+  Source: skeleton generated with Claude (Anthropic AI), 15, 29 and 31 Oct and 3 Nov 2026
+  (treasure check connected for Week 9 on 3 Nov 2026). Complete as given.
   The aquarium screen (wireframe 02), with the delivery (03), treasure check (04)
   and place-the-fish (05) panels. The top bar is filled in by nav.js.
 -->
@@ -55,15 +56,17 @@
     <section id="treasure-panel" class="panel treasure" hidden>
         <div class="panel-head">
             <h2>Correct! <span id="treasure-fish"></span> fish accepted.</h2>
-            <span class="soon">Chest check coming in Week 9</span>
+            <span class="hint">One try only</span>
         </div>
         <img id="treasure-image" alt="The same delivery crate: count the treasure chests">
-        <label for="chest-input">Bonus: how many treasure chests? <span class="hint">Each chest becomes a decoration.</span></label>
-        <div class="row">
-            <input id="chest-input" type="number" min="0" max="99" disabled>
-            <button type="button" disabled>Check</button>
-            <button id="treasure-skip" type="button">Skip</button>
-        </div>
+        <form id="treasure-form">
+            <label for="chest-input">Bonus: how many treasure chests? <span class="hint">Each chest becomes a decoration in the tank you choose next.</span></label>
+            <div class="row">
+                <input id="chest-input" type="number" min="0" max="99" required autocomplete="off">
+                <button type="submit">Check</button>
+                <button id="treasure-skip" type="button">Skip</button>
+            </div>
+        </form>
     </section>
 
     <!-- Accepted fish waiting for a tank (wireframe 05). Filled in by renderGame(). -->

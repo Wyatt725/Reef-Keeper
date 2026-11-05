@@ -34,4 +34,9 @@ public class InMemoryPlayerGameStore implements PlayerGameStore {
     public PlayerGame gameFor(String username) {
     	return games.computeIfAbsent(username, k -> deliveries.startNewGame());
     }
+    
+    @Override
+    public Map<String, PlayerGame> allGames() {
+        return Map.copyOf(games);
+    }
 }

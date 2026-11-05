@@ -1,0 +1,73 @@
+// Reef Keeper - CIS045-3 coursework.
+// Source: skeleton generated with Claude (Anthropic AI), 3 Nov 2026.
+// Method bodies marked TODO are written by me.
+package com.reefkeeper.game;
+
+import com.reefkeeper.game.events.TankHungryEvent;
+import com.reefkeeper.game.events.TanksFedEvent;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.util.List;
+
+/**
+ * The food rules. Every tank is fed for Tank.FOOD_TIME; after that it is hungry, and
+ * visitors pay nothing for the fish in it until the player buys food in the shop.
+ *
+ * Time works like deliveries and coins: each tank stores when its food runs out
+ * (Tank.getFedUntil), and the game compares that with the clock when it needs to know.
+ * Nothing counts down in the background, so a player who logs out for an hour comes
+ * back to tanks that went hungry at the right moment and earned nothing after that.
+ */
+public class FeedingService {
+
+    /** What feeding one hungry tank costs. */
+    public static final int PRICE_PER_TANK = 5;
+
+    private final Clock clock;
+    private final GameEventPublisher events;
+
+    public FeedingService(Clock clock, GameEventPublisher events) {
+        this.clock = clock;
+        this.events = events;
+    }
+
+    /** The tanks that are hungry right now. Given. */
+    public List<Tank> hungryTanks(PlayerGame game) {
+        Instant now = clock.instant();
+        return game.getAquarium().getTanks().stream().filter(tank -> tank.isHungry(now)).toList();
+    }
+
+    /**
+     * Publishes a TankHungryEvent once for every tank that has gone hungry since the last
+     * look. Called on every request, like collectIncome. Given.
+     *
+     * The tank remembers that its hunger was announced, so a hungry tank produces ONE event,
+     * not one per request; feeding it resets that.
+     */
+    public void announceHunger(PlayerGame game) {
+        for (Tank tank : hungryTanks(game)) {
+            if (!tank.isHungerAnnounced()) {
+                tank.markHungerAnnounced();
+                events.publish(new TankHungryEvent(tank.getId()));
+            }
+        }
+    }
+
+    /**
+     * STEP C3. Feeds every hungry tank and returns what it cost.
+     *
+     *   1. hungry = hungryTanks(game)
+     *   2. If hungry is empty: throw new IllegalStateException("No tanks are hungry")
+     *   3. cost = hungry.size() * PRICE_PER_TANK
+     *   4. game.getAquarium().spendCoins(cost)
+     *      (this throws by itself if there aren't enough coins: let it, and feed nothing)
+     *   5. Feed each hungry tank until clock.instant() + Tank.FOOD_TIME (tank.feed)
+     *   6. publish a new TanksFedEvent(hungry.size(), cost)
+     *   7. return cost
+     */
+    public int feedHungryTanks(PlayerGame game) {
+        // TODO step C3
+        throw new UnsupportedOperationException("TODO step C3: FeedingService.feedHungryTanks");
+    }
+}

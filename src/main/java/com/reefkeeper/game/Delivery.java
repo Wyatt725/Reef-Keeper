@@ -84,4 +84,38 @@ public class Delivery {
             throw new IllegalStateException("Delivery " + id + " is " + status + ", expected " + expected);
         }
     }
+    
+    private boolean treasureChecked;  // the player can count the chests once per delivery
+    private int decorationsWon;       // what the treasure check won; goes into the tank with the fish
+
+    /** The number of treasure chests in the crate: the bonus answer. Server-side only. */
+    public int chestCount() {
+        if (puzzle == null) {
+            throw new IllegalStateException("Delivery " + id + " has not been opened yet");
+        }
+        return puzzle.chestCount();
+    }
+
+    public boolean isTreasureChecked() {
+        return treasureChecked;
+    }
+
+    public int getDecorationsWon() {
+        return decorationsWon;
+    }
+
+    boolean checkTreasure(int chests) {
+    	if (status != DeliveryStatus.ACCEPTED) {
+            throw new IllegalStateException("Delivery " + id + " has no treasure check now");
+        }
+        if (treasureChecked) {
+            throw new IllegalStateException("You already checked the treasure in delivery " + id);
+        }
+        treasureChecked = true;
+        if (chests == chestCount()) {
+            decorationsWon = chestCount();
+            return true;
+        }
+        return false;
+    }
 }

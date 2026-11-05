@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
 
 /** A player's whole aquarium: their tanks and their coins. */
 public class Aquarium {
@@ -90,5 +91,24 @@ public class Aquarium {
         
         coins -= size.price();
         return addTank(size);
+    }
+    
+    public int totalDecorations() {
+        return tanks.stream().mapToInt(Tank::getDecorations).sum();
+    }
+
+    /** Takes coins off, e.g. for food. Throws, and changes nothing, if there aren't enough. */
+    public void spendCoins(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("amount must not be negative");
+        }
+        if (coins < amount) {
+            throw new IllegalStateException("Not enough coins: this costs " + amount);
+        }
+        coins -= amount;
+    }
+
+    public int fishInFedTanks(Instant at) {
+    	return tanks.stream().filter(tank -> !tank.isHungry(at)).mapToInt(Tank::getFishCount).sum();
     }
 }
