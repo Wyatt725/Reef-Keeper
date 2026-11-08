@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Assited by claude AI
+  Source: generated with Claude (Anthropic AI), 31 Oct and 3 Nov 2026; revised by Claude
+  (Anthropic AI), 8 Nov 2026, to fix the design review (toasts instead of a message line,
+  no extra "Back to your aquarium" box: the top bar already does that). Complete as given.
+  Shop screen (wireframe 06): tanks and fish food.
 -->
 <html lang="en">
 <head>
@@ -20,8 +23,6 @@
         <h2>Shop</h2>
         <span class="hint">More tanks mean room for bigger deliveries.</span>
     </div>
-
-    <p id="shop-message" class="message" aria-live="polite"></p>
 
     <section class="banner shop-summary">
         <span>You have <strong id="shop-coins">-</strong> coins</span>
@@ -50,11 +51,10 @@
             <button type="button" id="feed-button" disabled>Feed</button>
         </article>
     </section>
-
-    <p><a class="add-tank" href="/">Back to your aquarium</a></p>
 </main>
 
 <script src="account.js"></script>
+<script src="toast.js"></script>
 <script src="nav.js"></script>
 <script src="api.js"></script>
 <script src="shop.js"></script>

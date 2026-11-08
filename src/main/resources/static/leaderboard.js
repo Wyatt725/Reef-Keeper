@@ -1,22 +1,39 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Source: skeleton generated with Claude (Anthropic AI), 31 Oct 2026; every player's ranking
+// added 3 Nov 2026. renderBoard written by me (Week 9, step B2). Revised by Claude
+// (Anthropic AI), 8 Nov 2026, to fix the design review: number cells line up on the right,
+// the Decorations cell can hide on phones, and errors show as a toast.
+//
+// Leaderboard page (wireframe 07). GET /api/leaderboard gives a LeaderboardView:
+//   { top: [ {rank, username, fish, decorations, value}, ... up to 10 ],
+//     me:  {rank, username, fish, decorations, value} }
 
-/** Makes one table row for a leaderboard entry. isMe highlights it. Given. */
+/** Makes one table cell. className styles it (see ui.css): 'num' lines numbers up. */
+function makeCell(value, className) {
+    const cell = document.createElement('td');
+    cell.textContent = value;
+    if (className) {
+        cell.className = className;
+    }
+    return cell;
+}
+
+/** Makes one table row for a leaderboard entry. isMe highlights it. */
 function makeRow(entry, isMe) {
     const row = document.createElement('tr');
     if (isMe) {
         row.className = 'me';
     }
-    const name = isMe ? entry.username + ' (you)' : entry.username;
-    for (const value of [entry.rank, name, entry.fish, entry.decorations, entry.value]) {
-        const cell = document.createElement('td');
-        cell.textContent = value;
-        row.append(cell);
-    }
+    row.append(
+        makeCell(entry.rank, 'num'),
+        makeCell(isMe ? entry.username + ' (you)' : entry.username),
+        makeCell(entry.fish, 'num'),
+        makeCell(entry.decorations, 'num col-decor'),
+        makeCell(entry.value, 'num'));
     return row;
 }
 
-/** A thin row with "..." in it, for the gap between the top 10 and your own row. Given. */
+/** A thin row with "..." in it, for the gap between the top 10 and your own row. */
 function makeGapRow() {
     const row = document.createElement('tr');
     row.className = 'gap';
@@ -27,9 +44,7 @@ function makeGapRow() {
     return row;
 }
 
-/**
- * Fills the table from a LeaderboardView.
- */
+/** Fills the table from a LeaderboardView. */
 function renderBoard(board) {
 	const rows = document.getElementById('board-rows');
 	rows.replaceChildren();
@@ -46,13 +61,11 @@ function renderBoard(board) {
 	}
 }
 
-/** Loads the leaderboard and draws it. Given. */
+/** Loads the leaderboard and draws it. */
 async function loadLeaderboard() {
     const res = await api('GET', '/api/leaderboard');
     if (!res.ok) {
-        const message = document.getElementById('board-message');
-        message.textContent = res.data.error;
-        message.className = 'message wrong';
+        showToast(res.data.error, 'wrong');
         return;
     }
     renderBoard(res.data);

@@ -1,84 +1,201 @@
+/* Reef Keeper - CIS045-3 coursework.
+   Source: generated with Claude (Anthropic AI), Oct 2026; revised by Claude (Anthropic AI),
+   8 Nov 2026, to fix the design review: press feedback on buttons, readable button colours,
+   dark number inputs, a see-through sticky top bar, toasts, gentle motion, and spacing. */
+
+/* ---- Colours used everywhere ---- */
+:root {
+    --bg: #04263b;
+    --surface: #0a3a57;
+    --surface-raised: #0d4566;
+    --border: #1d5a7a;
+    --text: #e8f4f8;
+    --muted: #9cc3d5;
+    --primary: #1f7aa8;        /* white text on this = 4.8:1, readable */
+    --primary-hover: #2589bb;
+    --good: #7be0a3;
+    --bad: #ff9c8a;
+    --focus: #8fd3f4;
+}
+
 body {
     margin: 0;
     font-family: system-ui, sans-serif;
-    background: #04263b;
-    color: #e8f4f8;
+    line-height: 1.5;
+    background: var(--bg);
+    color: var(--text);
 }
 
 main {
     max-width: 880px;
     margin: 0 auto;
-    padding: 24px 16px;
+    padding: 24px 16px 96px; /* room at the bottom for toasts */
 }
 
 h1, h2 { margin: 0; }
-h2 { font-size: 1.15rem; margin: 20px 0 10px; }
+h1 { letter-spacing: -0.02em; line-height: 1.1; }
+h2 { font-size: 1.15rem; line-height: 1.3; margin: 24px 0 10px; }
 
-.hint { color: #9cc3d5; font-size: 0.9rem; font-weight: normal; }
+.hint { color: var(--muted); font-size: 0.9rem; font-weight: normal; }
+.correct { color: var(--good); }
+.wrong { color: var(--bad); }
 
-input, button {
-    font: inherit;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #3b7a99;
-}
-
-input { width: 80px; }
-
+/* ---- Buttons: react the moment they are pressed ---- */
 button {
-    background: #2b8fbf;
+    font: inherit;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: var(--primary);
     color: white;
     cursor: pointer;
 }
+button:hover:not(:disabled) { background: var(--primary-hover); }
+button:active:not(:disabled) { transform: scale(0.97); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
 
-button:disabled { background: #34586b; cursor: not-allowed; }
-
-.correct { color: #7be0a3; }
-.wrong { color: #ff9c8a; }
-
-/* ---- Test page (test.html) ---- */
-.picture {
-    min-height: 240px;
-    display: grid;
-    place-items: center;
-    margin: 16px 0;
+/* A less important button next to a main one (Skip, Feed on a tank card) */
+button.secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: #3b7a99;
 }
-.picture img { max-width: 100%; border-radius: 8px; }
-form { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
-#result { min-height: 1.5em; font-weight: 600; }
+button.secondary:hover:not(:disabled) { background: var(--surface-raised); }
 
-/* ---- Aquarium page (index.html) ---- */
+/* A button that looks like a link (Log out) */
+button.text-button {
+    background: transparent;
+    color: var(--focus);
+    border-color: transparent;
+    padding: 4px 6px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+button.text-button:hover:not(:disabled) { background: transparent; color: white; }
+
+/* Keyboard focus is always visible */
+button:focus-visible, input:focus-visible, a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+/* ---- Inputs: dark, larger, no spinner arrows ---- */
+input {
+    font: inherit;
+    font-size: 1.125rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #3b7a99;
+    background: var(--bg);
+    color: var(--text);
+}
+input[type="number"] { width: 96px; appearance: textfield; -moz-appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* ---- Inline message (login and register pages only; the game pages use toasts) ---- */
+.message { min-height: 1.5em; font-weight: 600; margin: 0 0 12px; }
+
+/* ---- Top bar: stays at the top, the page scrolls under it ---- */
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     flex-wrap: wrap;
     gap: 12px 24px;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 24px;
-    background: #062f48;
-    border-bottom: 1px solid #1d5a7a;
+    padding: 12px 24px;
+    background: rgba(6, 47, 72, 0.85);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    backdrop-filter: blur(12px) saturate(150%);
+    border-bottom: 1px solid var(--border);
 }
+.topbar h1 { font-size: 1.75rem; }
 .stats { display: flex; gap: 20px; }
+.stats strong { font-variant-numeric: tabular-nums; display: inline-block; }
 
-.message { min-height: 1.4em; font-weight: 600; margin: 0 0 12px; }
-
+/* ---- Surfaces ---- */
 .banner, .panel, .tank {
-    background: #0a3a57;
-    border: 1px solid #1d5a7a;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 16px;
 }
 .banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .panel { margin-top: 16px; }
+.panel h2, .panel-head h2 { margin: 0; }
 .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .panel img { display: block; max-width: 100%; margin: 14px auto; border-radius: 8px; }
-.panel form { justify-content: flex-start; flex-direction: column; align-items: flex-start; }
-.row { display: flex; gap: 8px; }
-.timer strong { font-size: 1.3rem; }
+.panel form { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
+/* Delivery countdown: turns red for the last 5 seconds */
+.timer strong { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.timer.urgent { color: var(--bad); }
+
+/* ---- Tanks ---- */
 .tanks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-.tank h3 { margin: 0 0 6px; font-size: 1rem; }
-.bar { height: 10px; border-radius: 99px; background: #04263b; overflow: hidden; margin: 8px 0; }
-.bar span { display: block; height: 100%; background: #2b8fbf; }
+.tank h3 { margin: 0 0 4px; font-size: 1rem; }
+.tank.hungry { border-color: rgba(255, 156, 138, 0.6); }
+.tank .secondary { margin-top: 8px; padding: 4px 10px; font-size: 0.9rem; }
+.bar { height: 10px; border-radius: 99px; background: var(--bg); overflow: hidden; margin: 8px 0; }
+.bar span { display: block; height: 100%; background: var(--primary-hover); }
 
 .tank-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+/* ---- Toasts: messages that appear at the bottom of the screen, then fade ---- */
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 20;
+    max-width: min(560px, calc(100vw - 32px));
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    border-left-width: 4px;
+    background: var(--surface-raised);
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.toast.correct { border-left-color: var(--good); }
+.toast.wrong { border-left-color: var(--bad); }
+.toast[hidden] { display: none; }
+
+/* ---- Motion, only for people who haven't asked their device to reduce it ---- */
+@media (prefers-reduced-motion: no-preference) {
+    button { transition: background-color 120ms ease, transform 100ms ease-out; }
+    .bar span { transition: width 400ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+    /* A panel slides down out of the banner above it when it opens, and back up when it closes */
+    .panel:not([hidden]) { animation: panel-in 220ms ease-out; }
+    .panel.leaving { animation: panel-out 160ms ease-in forwards; }
+    @keyframes panel-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    @keyframes panel-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-8px); } }
+
+    /* The tank that just got fish glows once */
+    .tank.pop { animation: tank-pop 900ms ease-out; }
+    @keyframes tank-pop { 0% { box-shadow: 0 0 0 0 rgba(123, 224, 163, 0.7); } 100% { box-shadow: 0 0 0 14px rgba(123, 224, 163, 0); } }
+
+    /* A number in the top bar that just changed gets a little bump */
+    .stats .bump { animation: bump 450ms ease-out; }
+    @keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.25); color: var(--good); } 100% { transform: scale(1); } }
+
+    /* The last 5 seconds of a delivery pulse */
+    .timer.urgent strong { display: inline-block; animation: pulse 1s ease-in-out infinite; }
+    @keyframes pulse { 50% { transform: scale(1.15); } }
+
+    .toast:not([hidden]) { animation: toast-in 200ms ease-out; }
+    .toast.leaving { animation: toast-out 200ms ease-in forwards; }
+    @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    @keyframes toast-out { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, 12px); } }
+}
+
+/* People who ask for less transparency get a solid top bar */
+@media (prefers-reduced-transparency: reduce) {
+    .topbar { background: #062f48; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

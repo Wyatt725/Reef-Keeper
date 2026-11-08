@@ -1,8 +1,13 @@
+/* Reef Keeper: login and create-account pages.
+   Source: generated with Claude (Anthropic AI), 29 Oct 2026; revised by Claude (Anthropic AI),
+   8 Nov 2026 (top-bar player styles moved to ui.css; inputs styled in style.css). */
+
 .auth {
     max-width: 380px;
     margin: 8vh auto 0;
     padding: 0 16px;
 }
+.auth h1 { font-size: 2.25rem; }
 
 .auth-form {
     display: flex;
@@ -11,15 +16,11 @@
     gap: 6px;
     margin: 12px 0 16px;
     padding: 20px;
-    background: #0a3a57;
-    border: 1px solid #1d5a7a;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 10px;
 }
 
 .auth-form input { width: auto; margin-bottom: 8px; }
-.auth-form button { margin-top: 6px; }
-.auth a { color: #8fd3f4; }
-
-.player { display: flex; align-items: center; gap: 10px; }
-.player form { display: inline; margin: 0; }
-.player button { padding: 4px 10px; }
+.auth-form button { margin-top: 6px; padding: 10px 14px; }
+.auth a { color: var(--focus); }

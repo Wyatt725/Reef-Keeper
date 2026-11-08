@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Assited by claude AI
+  Source: skeleton generated with Claude (Anthropic AI), 15, 29 and 31 Oct and 3 Nov 2026;
+  revised by Claude (Anthropic AI), 8 Nov 2026, to fix the design review (toasts instead of
+  a message line, number keypad on phones, Skip as a secondary button, a hint when no tank
+  has room). Complete as given.
   The aquarium screen (wireframe 02), with the delivery (03), treasure check (04)
   and place-the-fish (05) panels. The top bar is filled in by nav.js.
 -->
@@ -18,20 +21,18 @@
 <header id="topbar" class="topbar" data-page="aquarium"></header>
 
 <main class="game">
-    <p id="message" class="message" aria-live="polite"></p>
-
     <!-- Deliveries waiting (wireframe 02, note 3) -->
     <section class="banner">
         <div>
-            <strong><span id="waiting">0</span> deliveries waiting</strong>
+            <strong id="waiting-text">No deliveries waiting</strong>
             <div class="hint">Next delivery in <span id="next-in">-</span></div>
         </div>
         <button id="open-delivery" type="button">Open delivery</button>
     </section>
 
-    <!-- Visitors paying coins (Week 7). Filled in by renderGame(). -->
+    <!-- Visitors paying coins. Filled in by renderGame(). -->
     <section class="visitors">
-        <span>Visitors pay <strong id="income">0</strong> coins every minute</span>
+        <span id="income-text">Visitors pay <strong id="income">0</strong> coins every minute</span>
         <span class="hint">Next visit in <span id="visit-in">-</span></span>
     </section>
 
@@ -39,13 +40,13 @@
     <section id="delivery-panel" class="panel" hidden>
         <div class="panel-head">
             <h2>Delivery #<span id="delivery-id"></span></h2>
-            <span class="timer">Driver leaves in <strong id="delivery-timer">15</strong> s</span>
+            <span class="timer" id="timer">Driver leaves in <strong id="delivery-timer">-</strong> s</span>
         </div>
         <img id="delivery-image" alt="Delivery crate: count the fish">
         <form id="count-form">
             <label for="count-input">How many fish are in this crate? <span class="hint">Don't count the treasure chests.</span></label>
             <div class="row">
-                <input id="count-input" type="number" min="0" max="99" required autocomplete="off">
+                <input id="count-input" type="number" inputmode="numeric" min="0" max="99" required autocomplete="off">
                 <button type="submit">Accept delivery</button>
             </div>
         </form>
@@ -55,15 +56,15 @@
     <section id="treasure-panel" class="panel treasure" hidden>
         <div class="panel-head">
             <h2>Correct! <span id="treasure-fish"></span> fish accepted.</h2>
-            <span class="hint">One try only</span>
+            <span class="hint">Bonus: one try only</span>
         </div>
         <img id="treasure-image" alt="The same delivery crate: count the treasure chests">
         <form id="treasure-form">
-            <label for="chest-input">Bonus: how many treasure chests? <span class="hint">Each chest becomes a decoration in the tank you choose next.</span></label>
+            <label for="chest-input">How many treasure chests? <span class="hint">Each chest becomes a decoration in the tank you choose next.</span></label>
             <div class="row">
-                <input id="chest-input" type="number" min="0" max="99" required autocomplete="off">
+                <input id="chest-input" type="number" inputmode="numeric" min="0" max="99" required autocomplete="off">
                 <button type="submit">Check</button>
-                <button id="treasure-skip" type="button">Skip</button>
+                <button id="treasure-skip" type="button" class="secondary">Skip</button>
             </div>
         </form>
     </section>
@@ -71,6 +72,7 @@
     <!-- Accepted fish waiting for a tank (wireframe 05). Filled in by renderGame(). -->
     <section id="place-panel" class="panel" hidden>
         <h2>Where should the <span id="place-fish"></span> new fish go?</h2>
+        <p id="no-room" class="hint" hidden>None of your tanks has room for them yet. <a href="shop.html">Buy a tank in the shop</a> and they will wait for you.</p>
         <div id="place-tanks" class="tank-buttons"></div>
     </section>
 
@@ -81,6 +83,7 @@
 </main>
 
 <script src="account.js"></script>
+<script src="toast.js"></script>
 <script src="nav.js"></script>
 <script src="api.js"></script>
 <script src="treasure.js"></script>

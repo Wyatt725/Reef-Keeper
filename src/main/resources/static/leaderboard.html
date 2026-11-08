@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <!--
   Reef Keeper - CIS045-3 coursework.
-  Assited by claude AI
+  Source: generated with Claude (Anthropic AI), 31 Oct and 3 Nov 2026; revised by Claude
+  (Anthropic AI), 8 Nov 2026, to fix the design review (numbers line up on the right, the
+  Decorations column hides on phones so Value fits, toasts for errors, no extra "Back to
+  your aquarium" box). Complete as given.
+  Leaderboard screen (wireframe 07): the top 10 aquariums by value, plus your own row.
 -->
 <html lang="en">
 <head>
@@ -21,12 +25,16 @@
         <span class="hint">Your row is highlighted.</span>
     </div>
 
-    <p id="board-message" class="message" aria-live="polite"></p>
-
     <div class="table-wrap">
         <table class="board">
             <thead>
-            <tr><th>Rank</th><th>Keeper</th><th>Fish</th><th>Decorations</th><th>Value</th></tr>
+            <tr>
+                <th class="num">Rank</th>
+                <th>Keeper</th>
+                <th class="num">Fish</th>
+                <th class="num col-decor">Decorations</th>
+                <th class="num">Value</th>
+            </tr>
             </thead>
             <tbody id="board-rows">
             <tr><td colspan="5" class="later">Loading...</td></tr>
@@ -35,10 +43,10 @@
     </div>
 
     <p class="hint">Value = 10 per fish + 25 per decoration + the price of each tank.</p>
-    <p><a class="add-tank" href="/">Back to your aquarium</a></p>
 </main>
 
 <script src="account.js"></script>
+<script src="toast.js"></script>
 <script src="nav.js"></script>
 <script src="api.js"></script>
 <script src="leaderboard.js"></script>

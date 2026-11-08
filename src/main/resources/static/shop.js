@@ -1,37 +1,62 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Source: skeleton generated with Claude (Anthropic AI), 3 Nov 2026. buyTank and feedTanks
+// written by me (Weeks 7 and 9). Revised by Claude (Anthropic AI), 8 Nov 2026, to fix the
+// design review: greyed-out buttons say why ("Need 15 more coins", "Aquarium full"),
+// messages show as toasts, and the top bar's coins bump when they change.
 //
-// The page only SHOWS prices and greys out what the player
+// The shop page (wireframe 06). The page only SHOWS prices and greys out what the player
 // can't afford; the server decides the real price and checks the coins again on every
 // purchase, so editing this page in the browser can't buy a free tank or free food.
 
-/** Shows a message above the shop items. kind: 'correct', 'wrong' or '' (plain). Given. */
+const MAX_TANKS = 6;       // the same rule as Aquarium.MAX_TANKS on the server
+const FEED_PRICE = 5;      // the same rule as FeedingService.PRICE_PER_TANK on the server
+
+/** Shows a message at the bottom of the screen (toast.js). kind: 'correct', 'wrong' or ''. */
 function showShopMessage(text, kind) {
-    const message = document.getElementById('shop-message');
-    message.textContent = text;
-    message.className = 'message ' + (kind || '');
+    showToast(text, kind);
 }
 
 /**
  * Draws the shop from a GameView: coins, income, tank count, hungry tanks, and which
- * buttons can be pressed. Also keeps the coins and value in the top bar up to date. Given.
+ * buttons can be pressed. A button that can't be pressed says why.
  */
 function updateShop(view) {
-    document.getElementById('coins').textContent = view.coins;
-    document.getElementById('value').textContent = view.value;
+    updateTopBar(view.coins, view.value); // nav.js
     document.getElementById('shop-coins').textContent = view.coins;
     document.getElementById('shop-income').textContent = view.incomePerVisit;
     document.getElementById('shop-tanks').textContent = view.tanks.length;
+
     for (const button of document.querySelectorAll('button.buy')) {
-        button.disabled = view.coins < Number(button.dataset.price);
+        const price = Number(button.dataset.price);
+        if (view.tanks.length >= MAX_TANKS) {
+            button.textContent = 'Aquarium full';
+            button.disabled = true;
+        } else if (view.coins < price) {
+            button.textContent = 'Need ' + (price - view.coins) + ' more coins';
+            button.disabled = true;
+        } else {
+            button.textContent = 'Buy';
+            button.disabled = false;
+        }
     }
-    // Week 9: food. 5 coins for every hungry tank; nothing to buy when none are hungry.
+
     const hungry = view.tanks.filter(tank => tank.hungry).length;
+    const cost = hungry * FEED_PRICE;
+    const feed = document.getElementById('feed-button');
     document.getElementById('shop-hungry').textContent = hungry;
-    document.getElementById('feed-button').disabled = hungry === 0 || view.coins < hungry * 5;
+    if (hungry === 0) {
+        feed.textContent = 'No hungry tanks';
+        feed.disabled = true;
+    } else if (view.coins < cost) {
+        feed.textContent = 'Need ' + (cost - view.coins) + ' more coins';
+        feed.disabled = true;
+    } else {
+        feed.textContent = 'Feed ' + hungry + (hungry === 1 ? ' tank' : ' tanks') + ' (' + cost + ' coins)';
+        feed.disabled = false;
+    }
 }
 
-/** Loads the player's game and draws the shop. Given. */
+/** Loads the player's game and draws the shop. */
 async function loadShop() {
     const res = await api('GET', '/api/game');
     if (!res.ok) {
@@ -41,9 +66,9 @@ async function loadShop() {
     updateShop(res.data);
 }
 
-/** Week 7: buys a tank. Written by me. */
+/** Week 7: buys a tank. */
 async function buyTank(size) {
-	const res = await api('POST', '/api/tanks', { size: size });
+	const res = await api('POST', '/api/tanks', { size });
 	if (!res.ok) {
 	    showShopMessage(res.data.error, 'wrong');
 	    return;
@@ -52,9 +77,7 @@ async function buyTank(size) {
 	showShopMessage('New tank bought! Fill it from your next delivery.', 'correct');
 }
 
-/**
- * Runs when the Feed button is clicked.
- */
+/** Week 9: feeds every hungry tank. */
 async function feedTanks() {
 	const res = await api('POST', '/api/tanks/feed');
 	if (!res.ok) {
@@ -65,7 +88,7 @@ async function feedTanks() {
 	showShopMessage('Fed! Your tanks have food for 30 minutes.', 'correct');
 }
 
-// ---------- Given: connect events to handlers ----------
+// ---------- Connect events to handlers ----------
 
 for (const button of document.querySelectorAll('button.buy')) {
     button.addEventListener('click', () => buyTank(button.dataset.size));

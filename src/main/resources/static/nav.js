@@ -1,5 +1,35 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Source: generated with Claude (Anthropic AI), 31 Oct 2026; revised by Claude (Anthropic AI),
+// 8 Nov 2026 (design review fixes: Log out as a quiet text button, short labels on phones,
+// and updateTopBar() so a changed coin count gets a small "bump"). Complete as given.
+//
+// The top bar shared by every page after login: links, coins, value, player, Log out.
+// Each page has an empty <header id="topbar" data-page="..."> that this file fills in.
+
+/**
+ * Sets the coins and value in the top bar. A number that changed gets a short bump
+ * animation (only when the device allows motion; see style.css), so the player sees
+ * the effect of what they just did.
+ */
+function updateTopBar(coins, value) {
+    setStat('coins', coins);
+    setStat('value', value);
+}
+
+function setStat(id, number) {
+    const stat = document.getElementById(id);
+    if (!stat) {
+        return;
+    }
+    const text = String(number);
+    const changed = stat.textContent !== '-' && stat.textContent !== text;
+    stat.textContent = text;
+    if (changed) {
+        stat.classList.remove('bump');
+        void stat.offsetWidth; // restart the animation if it is already running
+        stat.classList.add('bump');
+    }
+}
 
 (function buildTopBar() {
     const bar = document.getElementById('topbar');
@@ -15,18 +45,18 @@
             <a href="leaderboard.html" data-page="leaderboard">Leaderboard</a>
         </nav>
         <div class="stats">
-            <span>Coins: <strong id="coins">-</strong></span>
-            <span>Value: <strong id="value">-</strong></span>
+            <span><span class="label">Coins: </span><strong id="coins">-</strong><span class="unit"> coins</span></span>
+            <span><span class="label">Value: </span><strong id="value">-</strong><span class="unit"> value</span></span>
         </div>
         <div class="player">
-            <span>Keeper: <strong id="player-name">-</strong></span>
+            <span><span class="label">Keeper: </span><strong id="player-name">-</strong></span>
             <form method="post" action="/logout">
                 <input type="hidden" name="_csrf">
-                <button type="submit">Log out</button>
+                <button type="submit" class="text-button">Log out</button>
             </form>
         </div>`;
 
-    // Highlight the link for the page we're on
+    // Mark the link for the page we're on
     const current = bar.dataset.page;
     for (const link of bar.querySelectorAll('.nav a')) {
         if (link.dataset.page === current) {
@@ -53,13 +83,12 @@
             }
         });
 
-    // Coins and value. On the aquarium page renderGame() keeps these up to date too.
+    // Coins and value. On the aquarium and shop pages, those pages keep them up to date too.
     fetch('/api/game')
         .then((response) => (response.ok ? response.json() : null))
         .then((game) => {
             if (game) {
-                document.getElementById('coins').textContent = game.coins;
-                document.getElementById('value').textContent = game.value;
+                updateTopBar(game.coins, game.value);
             }
         });
 })();

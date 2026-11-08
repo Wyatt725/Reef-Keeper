@@ -1,5 +1,7 @@
 /* Reef Keeper: top bar, treasure check, shop and leaderboard.
-   Assited by claude AI */
+   Source: generated with Claude (Anthropic AI), 31 Oct and 3 Nov 2026; revised by Claude
+   (Anthropic AI), 8 Nov 2026, to fix the design review: a quieter current-page marker,
+   dashed boxes only for "add", numbers lined up, and a compact layout on phones. */
 
 /* ---- Top bar ---- */
 .topbar h1 a { color: inherit; text-decoration: none; }
@@ -9,26 +11,50 @@
     text-decoration: none;
     padding: 6px 12px;
     border-radius: 6px;
+    border-bottom: 2px solid transparent;
 }
 .nav a:hover { background: #0d4566; }
-.nav a.active { background: #2b8fbf; color: #ffffff; font-weight: 600; }
+/* The page you are on: a light tint and an underline, so it doesn't look like a button */
+.nav a.active {
+    color: #ffffff;
+    font-weight: 600;
+    background: rgba(143, 211, 244, 0.12);
+    border-bottom-color: #8fd3f4;
+    border-radius: 6px 6px 0 0;
+}
+.player { display: flex; align-items: center; gap: 6px; }
+.player form { display: inline; margin: 0; }
 
 /* ---- Coming-later labels ---- */
 .soon {
     display: inline-block;
     font-size: 0.8rem;
     padding: 2px 8px;
-    border: 1px dashed #5f93ad;
+    border: 1px solid #5f93ad;
     border-radius: 99px;
     color: #9cc3d5;
 }
 
-/* ---- Treasure check (wireframe 04) ---- */
+/* ---- Visitors strip under the deliveries banner (plain, not dashed: it is information) ---- */
+.visitors {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    padding: 10px 16px;
+    background: rgba(10, 58, 87, 0.5);
+    border-radius: 10px;
+}
+.visitors strong { font-variant-numeric: tabular-nums; }
+
+/* ---- Treasure check ---- */
 .treasure .row { align-items: center; flex-wrap: wrap; }
 /* While the treasure check is open, keep the place-the-fish panel out of sight */
 #treasure-panel:not([hidden]) ~ #place-panel { display: none; }
 
-/* ---- "+ Buy another tank" under the tanks ---- */
+/* ---- "+ Buy another tank": the only dashed box, because dashes mean "add something here" ---- */
 .add-tank {
     display: block;
     margin-top: 14px;
@@ -41,7 +67,11 @@
 }
 .add-tank:hover { background: #0a3a57; }
 
-/* ---- Shop (wireframe 06) ---- */
+/* ---- Food line on each tank card ---- */
+.food { font-size: 0.9rem; color: #9cc3d5; }
+.food.hungry { color: #ff9c8a; font-weight: 600; }
+
+/* ---- Shop ---- */
 .shop-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 .shop-item {
     display: flex;
@@ -55,37 +85,46 @@
 .shop-item h3 { margin: 0; font-size: 1.05rem; }
 .shop-item .price { font-weight: 600; }
 .shop-item button { margin-top: auto; }
+.shop-summary { margin-bottom: 14px; }
+.shop-summary strong { font-variant-numeric: tabular-nums; }
 
-/* ---- Leaderboard (wireframe 07) ---- */
+/* ---- Leaderboard ---- */
 .board { width: 100%; border-collapse: collapse; background: #0a3a57; border-radius: 10px; overflow: hidden; }
 .board th, .board td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #1d5a7a; }
 .board th { font-size: 0.85rem; color: #9cc3d5; font-weight: 600; }
+/* Numbers line up on the right, every digit the same width */
+.board .num { text-align: right; font-variant-numeric: tabular-nums; }
 .board tr.me td { background: #12557d; font-weight: 600; }
 .board td.later { color: #9cc3d5; font-style: italic; }
+.board tr.gap td { text-align: center; color: #9cc3d5; padding: 4px; }
 .table-wrap { overflow-x: auto; }
 
 .page-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
 .page-head h2 { margin: 0; }
 
-/* ---- Visitors strip under the deliveries banner (Week 7) ---- */
-.visitors {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    padding: 10px 16px;
-    border: 1px dashed #3b7a99;
-    border-radius: 10px;
+/* ---- Phones: a compact two-row top bar, and a leaderboard that fits ---- */
+@media (max-width: 640px) {
+    /* Two rows: name of the game + coins on top, links + Log out underneath */
+    .topbar {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 8px 12px;
+        padding: 10px 16px;
+    }
+    .topbar h1 { grid-column: 1; grid-row: 1; font-size: 1.25rem; align-self: center; }
+    .topbar .stats { grid-column: 2 / 4; grid-row: 1; justify-self: end; align-self: center; gap: 10px; font-size: 0.9rem; }
+    .topbar .nav { grid-column: 1 / 3; grid-row: 2; gap: 0; flex-wrap: nowrap; }
+    .topbar .nav a { padding: 4px 7px; font-size: 0.95rem; }
+    .topbar .player { grid-column: 3; grid-row: 2; justify-self: end; font-size: 0.9rem; }
+    .topbar .player > span { display: none; } /* the name is on the leaderboard; Log out stays */
+    .topbar .stats .label { display: none; }
+    .topbar .stats .unit { display: inline; }
+    .topbar .stats span, .topbar .player { white-space: nowrap; }
 }
-
-/* ---- Shop summary line (Week 7) ---- */
-.shop-summary { margin-bottom: 14px; }
-
-/* ---- Food line on each tank card (Week 9) ---- */
-.food { font-size: 0.9rem; color: #9cc3d5; margin-bottom: 4px; }
-.food.hungry { color: #ff9c8a; font-weight: 600; }
-
-/* ---- Leaderboard: the "..." row between the top 10 and your own row (Week 9) ---- */
-.board tr.gap td { text-align: center; color: #9cc3d5; padding: 4px; }
+@media (min-width: 641px) {
+    .topbar .stats .unit { display: none; }
+}
+@media (max-width: 520px) {
+    .board .col-decor { display: none; }
+    .board th, .board td { padding: 10px 10px; }
+}
