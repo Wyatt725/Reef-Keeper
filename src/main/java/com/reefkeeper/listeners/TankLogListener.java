@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.listeners;
 
 import com.reefkeeper.game.events.TankHungryEvent;
@@ -11,7 +11,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Writes a Console line for the Week 9 events: treasure found, a tank going hungry,
+ * Writes a Console line for the events: treasure found, a tank going hungry,
  * tanks being fed. Like the other listeners, the game never calls this class.
  */
 @Component

@@ -1,6 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 8 Nov 2026 (design review fix: messages
-// appear where the player can see them, then fade). Complete as given.
+// Assisted by claude AI
 //
 // One small message ("toast") at the bottom of the screen. It is always in view, even on
 // a phone scrolled to the bottom, and it disappears by itself after a few seconds.

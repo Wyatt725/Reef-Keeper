@@ -1,7 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: generated with Claude (Anthropic AI), 31 Oct 2026; revised by Claude (Anthropic AI),
-// 8 Nov 2026 (design review fixes: Log out as a quiet text button, short labels on phones,
-// and updateTopBar() so a changed coin count gets a small "bump"). Complete as given.
+// Assisted by claude AI
 //
 // The top bar shared by every page after login: links, coins, value, player, Log out.
 // Each page has an empty <header id="topbar" data-page="..."> that this file fills in.

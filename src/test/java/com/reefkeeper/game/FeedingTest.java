@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.TankHungryEvent;
@@ -49,7 +49,7 @@ class FeedingTest {
         return game.getAquarium().getCoins();
     }
 
-    // ---- Given: Tank food and PlayerGame feeding the starter tank
+    // ---- Tank food and PlayerGame feeding the starter tank
 
     @Test
     void aNewGamesTankIsFedForThirtyMinutes() {
@@ -63,7 +63,7 @@ class FeedingTest {
         assertTrue(new Tank(9, TankSize.SMALL).isHungry(START));
     }
 
-    // ---- Step C1: Aquarium.fishInFedTanks
+    // ---- Aquarium.fishInFedTanks
 
     @Test
     void onlyFishInFedTanksCount() {
@@ -75,7 +75,7 @@ class FeedingTest {
         assertEquals(0, aquarium.fishInFedTanks(START.plus(Duration.ofHours(1))));
     }
 
-    // ---- Step C2: CoinService pays only for fed tanks
+    // ---- CoinService pays only for fed tanks
 
     @Test
     void visitorsPayNothingForAHungryTank() {
@@ -96,7 +96,7 @@ class FeedingTest {
         assertEquals(START.plus(Tank.FOOD_TIME), bought.getFedUntil());
     }
 
-    // ---- Step C3: FeedingService.feedHungryTanks
+    // ---- FeedingService.feedHungryTanks
 
     @Test
     void feedingCostsFiveCoinsPerHungryTankAndFeedsThemForThirtyMinutes() {
@@ -145,7 +145,7 @@ class FeedingTest {
         assertEquals(before + 5, coins());
     }
 
-    // ---- Given: FeedingService.announceHunger
+    // ---- FeedingService.announceHunger
 
     @Test
     void hungerIsAnnouncedOncePerHunger() {

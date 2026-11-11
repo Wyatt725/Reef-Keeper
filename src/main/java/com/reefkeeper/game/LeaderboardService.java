@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import java.util.ArrayList;
@@ -16,15 +16,6 @@ import java.util.Map;
  */
 public class LeaderboardService {
 
-    /**
-     * STEP B1. Every player, best aquarium first, as leaderboard rows.
-     *
-     * The sorting is given: `sorted` has the usernames from the highest value to the lowest,
-     * and players with the same value in A-Z order.
-     *
-     * Equal values share a rank and the next rank is skipped, like a sports table:
-     * values 400, 300, 300, 200 get ranks 1, 2, 2, 4.
-     */
     public List<LeaderboardEntry> rank(Map<String, PlayerGame> games) {
         List<String> sorted = new ArrayList<>(games.keySet());
         sorted.sort(Comparator.comparingInt((String name) -> games.get(name).getAquarium().value()).reversed().thenComparing(Comparator.naturalOrder()));

@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.web;
 
 import com.reefkeeper.game.Delivery;
@@ -38,15 +38,15 @@ public final class ApiModels {
 
     /**
      * An accepted delivery whose fish still need a tank. Its fish count is no longer secret.
-     * Week 9: decorations = what the treasure check won; they go into the same tank.
+     * Decorations = what the treasure check won; they go into the same tank.
      */
     public record PendingFish(int deliveryId, int fish, int decorations) {
     }
 
     /**
      * Everything the aquarium screen needs.
-     * Week 7 added incomePerVisit (coins each visit pays now) and secondsUntilVisitors.
-     * Week 9: of() takes the time "now", so each tank can say whether it is hungry.
+     * Added incomePerVisit (coins each visit pays now) and secondsUntilVisitors.
+     * Of() takes the time "now", so each tank can say whether it is hungry.
      */
     public record GameView(int coins, int value, List<TankView> tanks, int waitingDeliveries,
                            long secondsUntilNextDelivery, List<PendingFish> fishToPlace,
@@ -96,7 +96,7 @@ public final class ApiModels {
     public record BuyTankRequest(TankSize size) {
     }
 
-    /** Body of POST /api/deliveries/{id}/treasure, e.g. {"chests": 3}. Week 9. */
+    /** Body of POST /api/deliveries/{id}/treasure, e.g. {"chests": 3}. */
     public record TreasureRequest(int chests) {
     }
 

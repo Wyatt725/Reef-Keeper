@@ -1,6 +1,4 @@
-/* Reef Keeper: login and create-account pages.
-   Source: generated with Claude (Anthropic AI), 29 Oct 2026; revised by Claude (Anthropic AI),
-   8 Nov 2026 (top-bar player styles moved to ui.css; inputs styled in style.css). */
+/* Reef Keeper: login and create-account pages.*/
 
 .auth {
     max-width: 380px;

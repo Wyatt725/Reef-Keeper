@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.config;
 
 import com.reefkeeper.game.CoinService;
@@ -38,19 +38,19 @@ public class GameConfig {
         return new DeliveryService(puzzles, clock, events);
     }
 
-    /** Week 7: the coin rules share the same clock and the same event publisher. */
+    /** The coin rules share the same clock and the same event publisher. */
     @Bean
     public CoinService coinService(Clock clock, GameEventPublisher events) {
         return new CoinService(clock, events);
     }
 
-    /** Week 9: the food rules, same clock, same events. */
+    /** The food rules, same clock, same events. */
     @Bean
     public FeedingService feedingService(Clock clock, GameEventPublisher events) {
         return new FeedingService(clock, events);
     }
 
-    /** Week 9: ranks the aquariums. Needs nothing: it is given the games each time. */
+    /** Ranks the aquariums. Needs nothing: it is given the games each time. */
     @Bean
     public LeaderboardService leaderboardService() {
         return new LeaderboardService();

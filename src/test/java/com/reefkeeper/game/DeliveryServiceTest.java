@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.DeliveryAcceptedEvent;
@@ -67,7 +67,7 @@ class DeliveryServiceTest {
         assertEquals(0, waiting());
     }
 
-    // ---- Step 4: catchUp
+    // ---- catchUp
 
     @Test
     void newGameStartsWithOneDeliveryWaiting() {
@@ -113,7 +113,7 @@ class DeliveryServiceTest {
                 events.get(events.size() - 1));
     }
 
-    // ---- Step 5: openNext
+    // ---- openNext
 
     @Test
     void openingADeliveryGivesAPictureAndA30SecondDeadline() {
@@ -138,7 +138,7 @@ class DeliveryServiceTest {
         assertThrows(IllegalStateException.class, () -> service.openNext(game));
     }
 
-    // ---- Step 6: submitCount
+    // ---- submitCount
 
     @Test
     void rightCountAcceptsTheDelivery() {
@@ -177,7 +177,7 @@ class DeliveryServiceTest {
         assertThrows(java.util.NoSuchElementException.class, () -> service.submitCount(game, 999, 4));
     }
 
-    // ---- Step 7: placeFish
+    // ---- placeFish
 
     @Test
     void placingPutsTheFishInTheTank() {

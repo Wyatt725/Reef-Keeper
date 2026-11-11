@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 //
 // The one function every page uses to talk to the Java server. It used to live in
 // aquarium.js; the shop page needs it too, so it now has its own file instead of being

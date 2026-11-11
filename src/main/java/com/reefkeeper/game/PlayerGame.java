@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import java.time.Instant;
@@ -12,7 +12,7 @@ import java.util.Optional;
  * Everything about one player's game: their aquarium, their deliveries, and the two
  * timestamps the game is worked out from (last delivery, last visitors).
  *
- * Week 6: one PlayerGame per account, kept in memory by InMemoryPlayerGameStore.
+ * One PlayerGame per account, kept in memory by InMemoryPlayerGameStore.
  */
 public class PlayerGame {
 

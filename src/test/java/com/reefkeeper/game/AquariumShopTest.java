@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /** Coins in an Aquarium: earning them and spending them on tanks. */
 class AquariumShopTest {
 
-    // ---- addCoins (given)
+    // ---- addCoins
 
     @Test
     void addCoinsIncreasesCoins() {
@@ -26,7 +26,7 @@ class AquariumShopTest {
         assertEquals(10, aquarium.getCoins());
     }
 
-    // ---- Step 1: buyTank
+    // ---- buyTank
 
     @Test
     void buyingASmallTankCostsFiftyCoinsAndAddsTheTank() {

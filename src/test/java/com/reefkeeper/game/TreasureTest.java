@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.TreasureFoundEvent;
@@ -54,7 +54,7 @@ class TreasureTest {
         return game.getAquarium().getTanks().get(0);
     }
 
-    // ---- Step A1: Delivery.checkTreasure
+    // ---- Delivery.checkTreasure
 
     @Test
     void theRightChestCountWinsOneDecorationPerChest() {
@@ -87,7 +87,7 @@ class TreasureTest {
         assertFalse(delivery.isTreasureChecked());
     }
 
-    // ---- Step A2: DeliveryService.submitTreasure (+ the extra line in placeFish)
+    // ---- DeliveryService.submitTreasure (+ the extra line in placeFish)
 
     @Test
     void aRightCountPublishesTreasureFound() {

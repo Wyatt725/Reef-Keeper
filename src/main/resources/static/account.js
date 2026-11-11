@@ -1,6 +1,6 @@
 // Reef Keeper - CIS045-3 coursework.
 // Used on the login, register and aquarium pages.
-// Assited by claude AI
+// Assisted by claude AI
 
 /**
  * The CSRF token. The server puts it in a cookie called XSRF-TOKEN; only pages from our own

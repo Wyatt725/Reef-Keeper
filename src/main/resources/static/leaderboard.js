@@ -1,8 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 31 Oct 2026; every player's ranking
-// added 3 Nov 2026. renderBoard written by me (Week 9, step B2). Revised by Claude
-// (Anthropic AI), 8 Nov 2026, to fix the design review: number cells line up on the right,
-// the Decorations cell can hide on phones, and errors show as a toast.
+// Assisted by claude AI
 //
 // Leaderboard page (wireframe 07). GET /api/leaderboard gives a LeaderboardView:
 //   { top: [ {rank, username, fish, decorations, value}, ... up to 10 ],

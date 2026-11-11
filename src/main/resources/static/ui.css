@@ -1,7 +1,4 @@
-/* Reef Keeper: top bar, treasure check, shop and leaderboard.
-   Source: generated with Claude (Anthropic AI), 31 Oct and 3 Nov 2026; revised by Claude
-   (Anthropic AI), 8 Nov 2026, to fix the design review: a quieter current-page marker,
-   dashed boxes only for "add", numbers lined up, and a compact layout on phones. */
+/* Reef Keeper: top bar, treasure check, shop and leaderboard.*/
 
 /* ---- Top bar ---- */
 .topbar h1 a { color: inherit; text-decoration: none; }

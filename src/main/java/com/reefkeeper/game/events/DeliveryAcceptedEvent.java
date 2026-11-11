@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game.events;
 
 /** The player counted the fish correctly; the fish are waiting to be placed in a tank. */

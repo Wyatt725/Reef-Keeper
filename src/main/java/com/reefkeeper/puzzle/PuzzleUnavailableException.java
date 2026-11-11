@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.puzzle;
 
 /** Thrown when a PuzzleSource cannot produce a puzzle (API down, bad reply, timeout). */

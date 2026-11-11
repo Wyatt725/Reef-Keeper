@@ -1,7 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 15 Oct 2026. openNextDelivery,
-// startCountdown, sendCount and placeFish written by me (Weeks 5-9).
-// Revised by Claude (Anthropic AI), 8 Nov 2026, to fix the design review: messages as
+// Assisted by claude AI
 // toasts, "1 delivery" grammar, timers that tick every second, the last 5 seconds in red,
 // tank bars that grow, a glow on the tank that got fish, a Feed button on hungry tanks,
 // reasons on greyed-out tank buttons, panels that slide in and out, and no repeated

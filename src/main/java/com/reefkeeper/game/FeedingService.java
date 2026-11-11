@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game;
 
 import com.reefkeeper.game.events.TankHungryEvent;
@@ -53,18 +53,6 @@ public class FeedingService {
         }
     }
 
-    /**
-     * STEP C3. Feeds every hungry tank and returns what it cost.
-     *
-     *   1. hungry = hungryTanks(game)
-     *   2. If hungry is empty: throw new IllegalStateException("No tanks are hungry")
-     *   3. cost = hungry.size() * PRICE_PER_TANK
-     *   4. game.getAquarium().spendCoins(cost)
-     *      (this throws by itself if there aren't enough coins: let it, and feed nothing)
-     *   5. Feed each hungry tank until clock.instant() + Tank.FOOD_TIME (tank.feed)
-     *   6. publish a new TanksFedEvent(hungry.size(), cost)
-     *   7. return cost
-     */
     public int feedHungryTanks(PlayerGame game) {
     	List<Tank> hungry = hungryTanks(game);
         if (hungry.isEmpty()) {

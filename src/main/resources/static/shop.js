@@ -1,8 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 3 Nov 2026. buyTank and feedTanks
-// written by me (Weeks 7 and 9). Revised by Claude (Anthropic AI), 8 Nov 2026, to fix the
-// design review: greyed-out buttons say why ("Need 15 more coins", "Aquarium full"),
-// messages show as toasts, and the top bar's coins bump when they change.
+// Assisted by claude AI
 //
 // The shop page (wireframe 06). The page only SHOWS prices and greys out what the player
 // can't afford; the server decides the real price and checks the coins again on every
@@ -66,7 +63,7 @@ async function loadShop() {
     updateShop(res.data);
 }
 
-/** Week 7: buys a tank. */
+/** buys a tank. */
 async function buyTank(size) {
 	const res = await api('POST', '/api/tanks', { size });
 	if (!res.ok) {
@@ -77,7 +74,7 @@ async function buyTank(size) {
 	showShopMessage('New tank bought! Fill it from your next delivery.', 'correct');
 }
 
-/** Week 9: feeds every hungry tank. */
+/** feeds every hungry tank. */
 async function feedTanks() {
 	const res = await api('POST', '/api/tanks/feed');
 	if (!res.ok) {

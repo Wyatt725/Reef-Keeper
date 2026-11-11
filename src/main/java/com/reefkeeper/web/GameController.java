@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.web;
 
 import com.reefkeeper.game.CoinService;
@@ -39,10 +39,10 @@ import java.util.NoSuchElementException;
  *   GET  /api/game                      -> GameView
  *   POST /api/deliveries/open           -> DeliveryView
  *   POST /api/deliveries/{id}/count     -> CountResponse     body {"count": 7}
- *   POST /api/deliveries/{id}/treasure  -> TreasureResponse  body {"chests": 3}   (Week 9)
+ *   POST /api/deliveries/{id}/treasure  -> TreasureResponse  body {"chests": 3}   
  *   POST /api/deliveries/{id}/place     -> GameView          body {"tankId": 1}
  *   POST /api/tanks                     -> GameView          body {"size": "SMALL"}
- *   POST /api/tanks/feed                -> GameView                               (Week 9)
+ *   POST /api/tanks/feed                -> GameView                               
  */
 @RestController
 @RequestMapping("/api")
@@ -66,7 +66,7 @@ public class GameController {
     /**
      * The logged-in player's game, brought up to date before anything else happens:
      * visitors pay for the minutes since the last request, then any tank that has gone
-     * hungry since then is announced (Week 9).
+     * hungry since then is announced.
      */
     private PlayerGame currentGame(Principal principal) {
         PlayerGame game = games.gameFor(principal.getName());

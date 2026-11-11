@@ -1,5 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Assited by claude AI
+// Assisted by claude AI
 package com.reefkeeper.game.events;
 
 /** The delivery was sent back: a wrong count, or no answer within 30 seconds. */

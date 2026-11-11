@@ -1,8 +1,5 @@
 // Reef Keeper - CIS045-3 coursework.
-// Source: skeleton generated with Claude (Anthropic AI), 31 Oct 2026; chest check connected 3 Nov 2026.
-// checkTreasure written by me (Week 9, step A4). Revised by Claude (Anthropic AI), 8 Nov 2026,
-// to fix the design review: the panel slides in and out like the other panels, and the
-// result shows as a toast.
+// Assisted by claude AI
 //
 // The treasure-check panel (wireframe 04). It appears after a right fish count and
 // before the place-the-fish panel. The player gets ONE try at counting the chests in the
